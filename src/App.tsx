@@ -1,26 +1,35 @@
-import reactLogo from '@assets/react.svg';
-import viteLogo from '@assets/vite.svg';
-import tsLogo from '@assets/ts.svg';
-import eslintLogo from '@assets/eslint.svg';
-import prettierLogo from '@assets/prettier.svg';
-import axiosLogo from '@assets/axios.svg';
-import tenacityDev from '@assets/tenacity-dev.png';
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <main className='darkbg-zinc-900 darktext-gray-100 flex h-screen justify-center bg-blue-200 text-gray-900'>
-      <section className='my-4 max-w-screen-md flex-col space-y-4 p-4'>
-        <div className='mb-4 flex h-16 justify-between'>
-          <img className='h-full w-full' src={reactLogo} alt='react logo' />
-          <img className='h-full w-full' src={viteLogo} alt='vite logo' />
-          <img className='h-full w-full' src={tsLogo} alt='typescript logo' />
-          <img className='h-full w-full' src={eslintLogo} alt='eslint logo logo' />
-          <img className='h-full w-full' src={prettierLogo} alt='prettier logo' />
-          <img className='h-full w-full' src={axiosLogo} alt='axios logo' />
-        </div>
-      </section>
-    </main>
-  );
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
 
-export default App;
+export default App
