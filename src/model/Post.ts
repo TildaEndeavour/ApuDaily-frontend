@@ -1,15 +1,10 @@
-class Post {
-    id: number;
-    author: string;
-    title: string;
-    content: string;
+import type {Delta} from "quill";
 
-    constructor(author: string, title: string, content: string) {
-        this.id = Date.now();
-        this.author = author;
-        this.title = title;
-        this.content = content;
-    }
+class Post {
+    id: number,
+    title: string,
+    description: string,
+    content: Delta
 }
 
 export default Post;
