@@ -3,9 +3,11 @@ import Sidebar from "./Sidebar.tsx";
 
 const RootLayout = () => {
     return (
-        <div className="flex">
+        <div>
             <Sidebar/>
-            <Outlet/>
+            <div className="flex justify-center">
+                <Outlet/>
+            </div>
         </div>
     );
 }
