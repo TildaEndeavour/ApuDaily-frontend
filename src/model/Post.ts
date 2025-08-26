@@ -1,10 +1,13 @@
 import type {Delta} from "quill";
 
 class Post {
-    id: number,
-    title: string,
-    description: string,
-    content: Delta
+    author: string | null;
+    title: string;
+    description: string;
+    thumbnailUrl: string | null;
+    content: Delta;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export default Post;
