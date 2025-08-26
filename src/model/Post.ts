@@ -1,6 +1,7 @@
 import type {Delta} from "quill";
 
 class Post {
+    id: number;
     author: string | null;
     title: string;
     description: string;

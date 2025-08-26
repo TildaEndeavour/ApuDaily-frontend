@@ -1,16 +1,55 @@
 import {useLoaderData} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
 import type Post from "../model/Post.ts";
+import {useEffect, useRef, useState} from "react";
 
 const Posts = () => {
 
-    const posts = useLoaderData();
+    const [posts, setPosts] = useState(useLoaderData().content);
+    const [page, setPage] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(!useLoaderData().last);
+
+    const loadingRef = useRef(null);
+
+    const loadMore = async () => {
+        setIsLoading(true);
+        const nextPage = page + 1;
+        const response = await fetch(import.meta.env.VITE_BASE_URL + '/posts?pageNumber=' + nextPage);
+        const newPosts = await response.json();
+        setHasMore(!newPosts.last);
+        setPosts((prevPosts: Post[]) => [...prevPosts, ...newPosts.content]);
+        setPage(nextPage);
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !isLoading) {
+                    loadMore()
+                }
+            },
+            { threshold: 1.0}
+        );
+
+        if (loadingRef.current) { observer.observe(loadingRef.current);}
+
+        return () => observer.disconnect();
+    });
 
     return (
-        <div className="w-3/4 h-screen flex flex-wrap justify-center gap-12 pt-12">
-            {posts.content.map((post: Post) => {
-                return <PostCard data={post}/>
-            })}
+        <div className="w-3/4 h-screen">
+            <div className="flex flex-wrap justify-center gap-12 pt-12">
+                {posts.map((post: Post) => {
+                    return <PostCard key={post.id} data={post}/>
+                })}
+            </div>
+            {hasMore && (
+                <div ref={loadingRef}>
+                    {isLoading && <p>Загрузка...</p>}
+                </div>
+            )};
         </div>
     );
 }
@@ -19,9 +58,5 @@ export default Posts;
 
 export async function loader() {
     const response = await fetch(import.meta.env.VITE_BASE_URL + '/posts');
-    if (!response.ok) {
-        return { isError: true, message: 'Could not fetch events.' };
-    } else {
-        return response;
-    }
+    return response.json();
 }
