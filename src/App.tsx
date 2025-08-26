@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
+import {loader as postLoader} from "../src/pages/Posts.tsx";
 import HomePage from "./pages/Home.tsx";
 import RootLayout from "./components/RootLayout.tsx";
 import Posts from "./pages/Posts.tsx";
@@ -11,7 +12,11 @@ function App() {
         element: <RootLayout />,
         children: [
             {index: true, element: <HomePage/>},
-            {path: "/posts", element: <Posts/>},
+            {
+                path: "/posts",
+                element: <Posts/>,
+                loader: postLoader
+            },
             {path: "/posts/new", element: <NewPost/>}
         ]}
   ]);
