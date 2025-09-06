@@ -25,21 +25,22 @@ const NewPost = () => {
                            <textarea name="description"  placeholder="Enter description" className="h-24 max-h-31 p-4 w-full"/>
                        </p>
                    </section>
-                   <p className="flex flex-col gap-4 my-auto">
+                   <section className="flex flex-col gap-4">
                        <button className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Publish</button>
-                       <p className="flex flex-col items-center gap-2">
-                           <button className="rounded-3xl border-gray-100 w-fit h-fit p-4 mt-2 hover:bg-yellow-200 shadow-2xl/30">
+                       <button className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Preview</button>
+                       <p className="flex flex-row gap-4 justify-center">
+                           <button className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">
                                <Save
                                    size={36}
                                />
                            </button>
-                           <button className="rounded-3xl border-gray-100 w-fit h-fit p-4 mt-2 hover:bg-red-300 shadow-2xl/30">
+                           <button className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-red-300 shadow-2xl/30">
                                <Trash
                                    size={36}
                                />
                            </button>
                        </p>
-                   </p>
+                   </section>
                </div>
                 <section className="flex flex-row w-full border-b-1">
                     <p className="flex flex-row p-4">

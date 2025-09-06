@@ -4,6 +4,7 @@ import HomePage from "./pages/Home.tsx";
 import RootLayout from "./components/RootLayout.tsx";
 import Posts from "./pages/Posts.tsx";
 import NewPost from "./pages/NewPost.tsx";
+import ErrorPage from "./pages/ErrorPage.tsx";
 
 function App() {
 
@@ -15,7 +16,8 @@ function App() {
             {
                 path: "/posts",
                 element: <Posts/>,
-                loader: postLoader
+                loader: postLoader,
+                errorElement: <ErrorPage/>
             },
             {path: "/posts/new", element: <NewPost/>}
         ]}
