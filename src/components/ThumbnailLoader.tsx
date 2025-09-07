@@ -33,9 +33,15 @@ const ThumbnailLoader = () => {
             if(!file) return;
 
             const response = await uploadFile(file);
-
             const data = await response.json();
+
+            if(!response.ok){
+                setError(data.error);
+                return;
+            }
+
             setThumbnailUrl(data.path);
+            setError(null);
         }
         setIsLoading(false);
     }
@@ -51,8 +57,15 @@ const ThumbnailLoader = () => {
 
         const response = await uploadFile(files[0]);
         const data = await response.json();
-        setThumbnailUrl(data.path);
         setIsLoading(false);
+
+        if(!response.ok){
+            setError(data.error);
+            return;
+        }
+
+        setThumbnailUrl(data.path);
+        setError(null);
     }
 
     const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -62,13 +75,13 @@ const ThumbnailLoader = () => {
     const thumbnailPlaceholder = (
         <div onDrop={handleDrop}
              onDragOver={handleDragOver}
-             className="mt-12 flex flex-col items-center"
+             className={"flex flex-col items-center justify-center rounded-3xl h-full " + (error ? "bg-red-100" : "")}
         >
             <ImageUp size={48}/>
-            <p className="font-bold mt-4">Drop thumbnail here</p>
-            <p className="italic my-1">or</p>
+            <p className="font-bold mt-4">{error ? "Wrong file type, try again" : "Drop thumbnail here"}</p>
+            <p className="italic my-1">{error ? " " : "or"}</p>
             <button
-                className="p-4 w-fit  border-gray-200 border-1 rounded-3xl hover:bg-gray-200"
+                className="p-4 w-fit  border-black border-1 rounded-3xl hover:bg-gray-200"
                 onClick={loadHandler}>
                 BROWSE IMAGE
             </button>
