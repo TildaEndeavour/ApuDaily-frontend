@@ -1,4 +1,4 @@
-import {ImageUp, Loader} from "lucide-react";
+import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import {useState} from "react";
 
 const ThumbnailLoader = () => {
@@ -78,10 +78,18 @@ const ThumbnailLoader = () => {
     return (
         <div className="relative border-dashed border-3 rounded-3xl border-gray-200 hover:border-gray-400 w-112 h-64 shadow-2xl">
             {!thumbnailUrl ? thumbnailPlaceholder :
-                <img className="rounded-3xl w-full h-full object-contain"
-                     alt="Thumbnail"
-                     src={import.meta.env.VITE_BASE_URL + thumbnailUrl}
-                />
+                (<>
+                    <img className="rounded-3xl w-full h-full object-contain"
+                         alt="Thumbnail"
+                         src={import.meta.env.VITE_BASE_URL + thumbnailUrl}
+                    />
+                    <p className="absolute inset-0 hover:animate-spin flex items-center justify-center"
+                       onClick={loadHandler}
+                    >
+                        <RefreshCcw className="scale-x-[-1]" strokeWidth={1} size={48}/>
+                    </p>
+                </>
+                )
             }
             {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-3xl">
