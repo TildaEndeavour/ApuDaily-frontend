@@ -57,6 +57,6 @@ const Posts = () => {
 export default Posts;
 
 export async function loader() {
-    const response = await fetch(import.meta.env.VITE_BASE_URL + '/posts');
+    const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts');
     return response.json();
 }
