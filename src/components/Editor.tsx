@@ -18,12 +18,48 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
             quillRef.current = new Quill(editorRef.current, {
                 theme: "snow",
                 modules: {
-                    toolbar: [
-                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                        [{ size: ["small", "large", "huge", false] }],
-                        ["bold", "italic", "underline"],
-                        ["image", "code-block"],
-                    ],
+                    toolbar: {
+                        container: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            [{ size: ["small", "large", "huge", false] }],
+                            ["bold", "italic", "underline"],
+                            ["image", "code-block"],
+                        ],
+                        handlers: {
+                            image: function(){
+                                const input = document.createElement("input");
+                                input.setAttribute("type","file");
+                                input.setAttribute("accept","image/*");
+                                input.click();
+
+                                input.onchange = async () => {
+                                    const file = input.files?.[0];
+                                    if(!file) return;
+
+                                    const formData = new FormData();
+                                    formData.append("file", file);
+
+                                    const res = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+                                        {
+                                            method: "POST",
+                                            body: formData
+                                        }
+                                    );
+
+                                    const data = await res.json();
+                                    console.log(data.path);
+
+                                    const quill = quillRef.current;
+                                    if(!quill) return;
+                                    const range = quill.getSelection();
+                                    if(range){
+                                        quill.insertEmbed(range.index, "image", import.meta.env.VITE_BASE_URL + data.path);
+                                        quill.setSelection(range.index + 1);
+                                    }
+                                }
+                            }
+                        }
+                    },
                 }
             });
 
