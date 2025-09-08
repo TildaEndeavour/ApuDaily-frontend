@@ -47,7 +47,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
                                     );
 
                                     const data = await res.json();
-                                    console.log(data.path);
 
                                     const quill = quillRef.current;
                                     if(!quill) return;

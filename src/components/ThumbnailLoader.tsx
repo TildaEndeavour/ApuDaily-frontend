@@ -1,9 +1,8 @@
 import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import {useState} from "react";
 
-const ThumbnailLoader = () => {
+const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null) => void}> = ({url,setUrl}) => {
 
-    const [thumbnailUrl, setThumbnailUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -40,7 +39,7 @@ const ThumbnailLoader = () => {
                 return;
             }
 
-            setThumbnailUrl(data.path);
+            setUrl(import.meta.env.VITE_BASE_URL + data.path);
             setError(null);
         }
         setIsLoading(false);
@@ -64,7 +63,7 @@ const ThumbnailLoader = () => {
             return;
         }
 
-        setThumbnailUrl(data.path);
+        setUrl(import.meta.env.VITE_BASE_URL + data.path);
         setError(null);
     }
 
@@ -81,6 +80,7 @@ const ThumbnailLoader = () => {
             <p className="font-bold mt-4">{error ? "Wrong file type, try again" : "Drop thumbnail here"}</p>
             <p className="italic my-1">{error ? " " : "or"}</p>
             <button
+                type="button"
                 className="p-4 w-fit  border-black border-1 rounded-3xl hover:bg-gray-200"
                 onClick={loadHandler}>
                 BROWSE IMAGE
@@ -90,11 +90,11 @@ const ThumbnailLoader = () => {
 
     return (
         <div className="relative border-dashed border-3 rounded-3xl border-gray-200 hover:border-gray-400 w-112 h-64 shadow-2xl">
-            {!thumbnailUrl ? thumbnailPlaceholder :
+            {!url ? thumbnailPlaceholder :
                 (<>
                     <img className="rounded-3xl w-full h-full object-contain"
                          alt="Thumbnail"
-                         src={import.meta.env.VITE_BASE_URL + thumbnailUrl}
+                         src={url}
                     />
                     <p className="absolute inset-0 hover:animate-spin flex items-center justify-center"
                        onClick={loadHandler}
