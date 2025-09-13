@@ -8,6 +8,9 @@ import {TagBubble} from "../components/TagBubble.tsx";
 import  Tag from "../model/Tag.ts";
 import {isPostTitle, isTag} from "../util/validation.ts";
 
+const BASE_URL: string = import.meta.env.VITE_BASE_URL;
+const API_VER: string = import.meta.env.VITE_API_VER;
+
 const NewPost = () => {
     const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
     const [content, setContent] = useState("");
@@ -36,13 +39,16 @@ const NewPost = () => {
 
         fd.append("content", content);
 
-        await loadTagsToServer();
+        const tags = await loadTagsToServer();
+        fd.set("tags", tags.map(tag => tag.id));
+
+        for(const [key,value] of fd) console.log(key, value);
     }
 
     const loadTagsToServer = async() => {
         console.log(tags);
         try {
-            const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + "/tags", {
+            const response = await fetch(BASE_URL + API_VER + "/tags", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,7 +60,7 @@ const NewPost = () => {
                 throw new Error("Ошибка при сохранении тегов");
             }
 
-            const data = await response.json();
+            return await response.json();
         } catch (error) {
             console.error(error);
         }
