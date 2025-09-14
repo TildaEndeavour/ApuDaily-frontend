@@ -7,3 +7,7 @@ export function isPostTitle(value: string){
     const titleRegex = /^(?=.{10,100}$)[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9\s.,!?-]*$/;
     return titleRegex.exec(value);
 }
+
+export function isContentEmpty(content: string){
+    return content.length < 300;
+}

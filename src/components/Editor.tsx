@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, {type RefObject, useEffect, useRef} from "react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 
@@ -7,15 +7,15 @@ interface QuillEditorProps {
     value?: string;
     onChange?: (value: string) => void;
     options?: QuillOptions;
+    ref: RefObject<Quill | null>;
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
+const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     const editorRef = useRef<HTMLDivElement | null>(null);
-    const quillRef = useRef<Quill | null>(null);
 
     useEffect(() => {
-        if (editorRef.current && !quillRef.current) {
-            quillRef.current = new Quill(editorRef.current, {
+        if (editorRef.current && !ref.current) {
+            ref.current = new Quill(editorRef.current, {
                 theme: "snow",
                 modules: {
                     toolbar: {
@@ -48,7 +48,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
 
                                     const data = await res.json();
 
-                                    const quill = quillRef.current;
+                                    const quill = ref.current;
                                     if(!quill) return;
                                     const range = quill.getSelection();
                                     if(range){
@@ -63,20 +63,20 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
             });
 
             if (value) {
-                quillRef.current.root.innerHTML = value;
+                ref.current.root.innerHTML = value;
             }
 
-            quillRef.current.on("text-change", () => {
+            ref.current.on("text-change", () => {
                 if (onChange) {
-                    onChange(quillRef.current!.root.innerHTML);
+                    onChange(ref.current!.root.innerHTML);
                 }
             });
         }
     });
 
     useEffect(() => {
-        if (quillRef.current && value !== undefined && quillRef.current.root.innerHTML !== value) {
-            quillRef.current.root.innerHTML = value;
+        if (ref.current && value !== undefined && ref.current.root.innerHTML !== value) {
+            ref.current.root.innerHTML = value;
         }
     }, [value]);
 
