@@ -15,7 +15,7 @@ const Posts = () => {
     const loadMore = async () => {
         setIsLoading(true);
         const nextPage = page + 1;
-        const response = await fetch(import.meta.env.VITE_BASE_URL + '/posts?pageNumber=' + nextPage);
+        const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts?pageNumber=' + nextPage);
         const newPosts = await response.json();
         setHasMore(!newPosts.last);
         setPosts((prevPosts: Post[]) => [...prevPosts, ...newPosts.content]);

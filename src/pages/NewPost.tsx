@@ -29,14 +29,14 @@ const NewPost = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        formData.set("author", "null");
+        //formData.set("author", "null");
 
         const title = formData.get('title');
 
         if(!title || !isPostTitle(title.toString())) return setErrors(prevErrors => ({...prevErrors, title: "Please enter valid title"}));
         else setErrors(prevErrors => ({...prevErrors, title: ""}));
 
-        if(thumbnailUrl) formData.set("thumbnailUrl", thumbnailUrl);
+        if(thumbnailUrl) formData.set("thumbnailUrl", thumbnailUrl.replace(BASE_URL, ""));
         else formData.set("thumbnailUrl", "");
 
 
