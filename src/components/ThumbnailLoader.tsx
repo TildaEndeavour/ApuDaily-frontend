@@ -1,7 +1,11 @@
 import {ImageUp, Loader, RefreshCcw} from "lucide-react";
-import {useState} from "react";
+import React, {useState} from "react";
+import type Thumbnail from "../model/Thumbnail.ts";
 
-const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null) => void}> = ({url,setUrl}) => {
+const BASE_URL:string = import.meta.env.VITE_BASE_URL;
+const API_VER:string = import.meta.env.VITE_API_VER;
+
+const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thumbnail:Thumbnail) => void}> = ({thumbnail, setThumbnail}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -11,7 +15,7 @@ const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null
         const formData = new FormData();
         formData.append("file",file);
 
-        return await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+        return await fetch(BASE_URL + API_VER + '/upload',
             {
                 method: "POST",
                 body: formData
@@ -39,7 +43,7 @@ const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null
                 return;
             }
 
-            setUrl(import.meta.env.VITE_BASE_URL + data.path);
+            setThumbnail(data);
             setError(null);
         }
         setIsLoading(false);
@@ -63,7 +67,7 @@ const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null
             return;
         }
 
-        setUrl(import.meta.env.VITE_BASE_URL + data.path);
+        setThumbnail(data);
         setError(null);
     }
 
@@ -90,11 +94,11 @@ const ThumbnailLoader: React.FC<{url: string | null, setUrl: (path:string | null
 
     return (
         <div className="relative border-dashed border-3 rounded-3xl border-gray-200 hover:border-gray-400 w-112 h-64 shadow-2xl">
-            {!url ? thumbnailPlaceholder :
+            {!thumbnail ? thumbnailPlaceholder :
                 (<>
                     <img className="rounded-3xl w-full h-full object-contain"
                          alt="Thumbnail"
-                         src={url}
+                         src={BASE_URL + thumbnail.url}
                     />
                     <p className="absolute inset-0 hover:animate-spin flex items-center justify-center"
                        onClick={loadHandler}

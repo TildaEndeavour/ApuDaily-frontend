@@ -5,11 +5,12 @@ import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, type RefObject} from "react";
 import type Category from "../model/Category.ts";
 import type Quill from "quill";
+import type Thumbnail from "../model/Thumbnail.ts";
 
 interface PostFormProps {
     handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-    thumbnailUrl: string | null;
-    onThumbnailChange: (url: string | null) => void;
+    thumbnail: Thumbnail | null;
+    onThumbnailChange: (thumbnail: Thumbnail) => void;
     editorRef: RefObject<Quill | null>
     content: string;
     onContentChange: (content: string) => void;
@@ -25,7 +26,7 @@ interface PostFormProps {
 
 const PostForm: React.FC<PostFormProps> = ({
      handleSubmit,
-     thumbnailUrl,
+     thumbnail,
      onThumbnailChange,
      editorRef,
      content,
@@ -43,8 +44,8 @@ const PostForm: React.FC<PostFormProps> = ({
         <form className="w-3/4 flex flex-col gap-4 mt-12" onSubmit={(event) => handleSubmit(event)}>
             <div className="flex gap-4">
                 <ThumbnailLoader
-                    url={thumbnailUrl}
-                    setUrl={onThumbnailChange}
+                    thumbnail={thumbnail}
+                    setThumbnail={onThumbnailChange}
                 />
                 <section className="w-full p-4 flex flex-col gap-4">
                     <p className="flex flex-row border-b-1 pb-2">
@@ -79,16 +80,16 @@ const PostForm: React.FC<PostFormProps> = ({
             </div>
             <section className="flex flex-row w-full border-b-1">
                 <p className="flex flex-row p-4">
-                    <label htmlFor="category" className="my-auto">Category: </label>
-                    <select name="category" className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1">
+                    <label htmlFor="categoryId" className="my-auto">Category: </label>
+                    <select name="categoryId" className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1">
                         {categories.map(category => {
                             return <option key={category.slug} value={category.slug}>{category.name}</option>
                         })}
                     </select>
                 </p>
                 <p className="flex flex-row p-4 w-full">
-                    <label htmlFor="tags" className="my-auto">Tags: </label>
-                    <input name="tags"
+                    <label htmlFor="tagsId" className="my-auto">Tags: </label>
+                    <input name="tagsId"
                            placeholder="Append tag"
                            ref={tagInputRef}
                            onKeyDown={(event) => onAddTag(event)}

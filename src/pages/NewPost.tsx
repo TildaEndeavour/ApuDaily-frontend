@@ -5,13 +5,14 @@ import  Tag from "../model/Tag.ts";
 import {isContentEmpty, isPostTitle, isTag} from "../util/validation.ts";
 import PostForm from "../components/PostForm.tsx";
 import type Quill from "quill";
+import type Thumbnail from "../model/Thumbnail.ts";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 const API_VER: string = import.meta.env.VITE_API_VER;
 
 const NewPost = () => {
 
-    const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+    const [thumbnail, setThumbnail] = useState<Thumbnail | null>(null);
     const quillRef = useRef<Quill | null>(null);
     const [content, setContent] = useState("");
     const [tags, setTags] = useState<Tag[]>([]);
@@ -29,37 +30,29 @@ const NewPost = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        //formData.set("author", "null");
-
         const title = formData.get('title');
 
         if(!title || !isPostTitle(title.toString())) return setErrors(prevErrors => ({...prevErrors, title: "Please enter valid title"}));
         else setErrors(prevErrors => ({...prevErrors, title: ""}));
 
-        if(thumbnailUrl) formData.set("thumbnailUrl", thumbnailUrl.replace(BASE_URL, ""));
-        else formData.set("thumbnailUrl", "");
-
+        if(thumbnail) formData.set("thumbnailId", thumbnail.id.toString());
+        else formData.set("thumbnailId", "");
 
         if(!isContentEmpty(content)) formData.set("content", content);
         else return setErrors(prevErrors => ({...prevErrors, content: "Please fill publication content"}));
 
-        const category = categories.filter(category => category.slug === formData.get("category"));
-        formData.set("category", category[0].id.toString());
+        const category = categories.filter(category => category.slug === formData.get("categoryId"));
+        formData.set("categoryId", category[0].id.toString());
 
         try {
             const tags: Tag[] = await loadTagsToServer();
-            formData.set("tags", tags.map(tag => tag.id).toString());
-
-            for (const pair of formData.entries()) {
-                console.log(`${pair[0]}: ${pair[1]}`);
-            }
+            formData.set("tagsId", tags.map(tag => tag.id).toString());
 
             const response = await fetch(BASE_URL + API_VER + '/posts', {
                 method: 'POST',
                 body: formData,
             });
             if (!response.ok) throw new Error('Failed to submit post');
-            console.log('Post submitted:', await response.json());
         } catch (error: unknown) {
 
             let errorMessage = 'Unknown error';
@@ -108,7 +101,7 @@ const NewPost = () => {
     const handleDeleteTag = (tagToDelete: string) =>
         setTags(prevTags => prevTags.filter(tag => tag.name !== tagToDelete));
 
-    const handleThumbnailChange = (url: string | null) => setThumbnailUrl(url);
+    const handleThumbnailChange = (thumbnail: Thumbnail) => setThumbnail(thumbnail);
 
     const handleContentChange = (newContent: string) => setContent(newContent);
 
@@ -120,7 +113,7 @@ const NewPost = () => {
         <div className="w-screen h-screen flex flex-col items-center gap-4">
             <PostForm
                 handleSubmit={handleSubmit}
-                thumbnailUrl={thumbnailUrl}
+                thumbnail={thumbnail}
                 onThumbnailChange={handleThumbnailChange}
                 editorRef={quillRef}
                 content={content}

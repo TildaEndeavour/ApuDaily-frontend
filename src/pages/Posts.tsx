@@ -47,7 +47,7 @@ const Posts = () => {
             </div>
             {hasMore && (
                 <div ref={loadingRef}>
-                    {isLoading && <p>Загрузка...</p>}
+                    {isLoading && <p>Loading...</p>}
                 </div>
             )};
         </div>
