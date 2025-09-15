@@ -1,6 +1,6 @@
 import React, {type FormEvent, useRef, useState} from "react";
 import  Category from "../model/Category.ts";
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useNavigate} from "react-router-dom";
 import  Tag from "../model/Tag.ts";
 import {isContentEmpty, isPostTitle, isTag} from "../util/validation.ts";
 import PostForm from "../components/PostForm.tsx";
@@ -23,6 +23,7 @@ const NewPost = () => {
         tags: "",
         content: ""
     });
+    const navigate = useNavigate();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
@@ -53,6 +54,7 @@ const NewPost = () => {
                 body: formData,
             });
             if (!response.ok) throw new Error('Failed to submit post');
+            navigate('/posts');
         } catch (error: unknown) {
 
             let errorMessage = 'Unknown error';
