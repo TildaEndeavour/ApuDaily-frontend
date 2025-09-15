@@ -5,6 +5,7 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 const PostCard: React.FC<{post: Post}> = ({post}) => {
 
+    console.log(post);
     return (
         <div className="p-4 w-104 h-120 border rounded-3xl shadow-2xl flex flex-col">
             <section className="w-full h-6/12 flex flex-row justify-center items-center">
@@ -23,6 +24,14 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
             </section>
             <section className="mt-4 flex flex-row items-center justify-between">
                 <p className="p-2 bg-gray-200 rounded-3xl w-fit h-fit text-xs">{post.category.name}</p>
+                <p>
+                    {new Date(post.createdAt).toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        timeZone: 'UTC'
+                    })}
+                </p>
             </section>
         </div>
     );
