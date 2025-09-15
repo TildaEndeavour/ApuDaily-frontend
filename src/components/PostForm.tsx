@@ -6,6 +6,7 @@ import React, {type FormEvent, type RefObject} from "react";
 import type Category from "../model/Category.ts";
 import type Quill from "quill";
 import type Thumbnail from "../model/Thumbnail.ts";
+import PostPreview from "./PostPreview.tsx";
 
 interface PostFormProps {
     handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -22,6 +23,9 @@ interface PostFormProps {
     errors: { title: string; tags: string; content: string };
     onClearTitleError: () => void;
     onClearTagsError: () => void;
+    isPreviewOpen: boolean;
+    onOpenPreview: () => void;
+    onClosePreview: () => void;
 }
 
 const PostForm: React.FC<PostFormProps> = ({
@@ -38,7 +42,10 @@ const PostForm: React.FC<PostFormProps> = ({
      categories,
      errors,
      onClearTitleError,
-     onClearTagsError}) => {
+     onClearTagsError,
+     isPreviewOpen,
+     onOpenPreview,
+     onClosePreview}) => {
 
     return (
         <form className="w-3/4 flex flex-col gap-4 mt-12" onSubmit={(event) => handleSubmit(event)}>
@@ -63,7 +70,13 @@ const PostForm: React.FC<PostFormProps> = ({
                 </section>
                 <section className="flex flex-col gap-4">
                     <button type="submit" className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Publish</button>
-                    <button type="button" className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Preview</button>
+                    <button type="button"
+                            className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30"
+                            onClick={onOpenPreview}
+                    >Preview</button>
+                    <PostPreview isOpen={isPreviewOpen} onClose={onClosePreview}>
+                        {content}
+                    </PostPreview>
                     <p className="flex flex-row gap-4 justify-center">
                         <button type="button" className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">
                             <Save

@@ -2,6 +2,7 @@
 import React, {type RefObject, useEffect, useRef} from "react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
+import Thumbnail from "../model/Thumbnail.ts";
 
 interface QuillEditorProps {
     value?: string;
@@ -22,6 +23,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
                         container: [
                             [{ header: [1, 2, 3, 4, 5, 6, false] }],
                             [{ size: ["small", "large", "huge", false] }],
+                            [{ align: ['', 'center', 'right', 'justify'] }],
                             ["bold", "italic", "underline"],
                             ["image", "code-block"],
                         ],
@@ -46,13 +48,13 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
                                         }
                                     );
 
-                                    const data = await res.json();
+                                    const data: Thumbnail = await res.json();
 
                                     const quill = ref.current;
                                     if(!quill) return;
                                     const range = quill.getSelection();
                                     if(range){
-                                        quill.insertEmbed(range.index, "image", import.meta.env.VITE_BASE_URL + data.path);
+                                        quill.insertEmbed(range.index, "image", import.meta.env.VITE_BASE_URL + data.url);
                                         quill.setSelection(range.index + 1);
                                     }
                                 }

@@ -12,6 +12,7 @@ const API_VER: string = import.meta.env.VITE_API_VER;
 
 const NewPost = () => {
 
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [thumbnail, setThumbnail] = useState<Thumbnail | null>(null);
     const quillRef = useRef<Quill | null>(null);
     const [content, setContent] = useState("");
@@ -111,6 +112,10 @@ const NewPost = () => {
 
     const clearTagsError = () => setErrors(prevErrors => ({ ...prevErrors, tags: "" }));
 
+    const openPreview = () => setIsPreviewOpen(true);
+
+    const closePreview = () => setIsPreviewOpen(false);
+
     return (
         <div className="w-screen h-screen flex flex-col items-center gap-4">
             <PostForm
@@ -128,6 +133,9 @@ const NewPost = () => {
                 errors={errors}
                 onClearTitleError={clearTitleError}
                 onClearTagsError={clearTagsError}
+                isPreviewOpen={isPreviewOpen}
+                onOpenPreview={openPreview}
+                onClosePreview={closePreview}
             />
         </div>
     );
