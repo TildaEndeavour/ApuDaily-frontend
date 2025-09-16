@@ -40,7 +40,7 @@ const NewPost = () => {
         if(thumbnail) formData.set("thumbnailId", thumbnail.id.toString());
         else formData.set("thumbnailId", "");
 
-        if(!isContentEmpty(content)) formData.set("content", content);
+        if(!isContentEmpty(quillRef.current!.getText().trim())) formData.set("content", content);
         else return setErrors(prevErrors => ({...prevErrors, content: "Please fill publication content"}));
 
         const category = categories.filter(category => category.slug === formData.get("categoryId"));
