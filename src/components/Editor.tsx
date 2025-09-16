@@ -3,6 +3,7 @@ import React, {type RefObject, useEffect, useRef} from "react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import Thumbnail from "../model/Thumbnail.ts";
+import Counter from "./quill-modules/Counter.ts";
 
 interface QuillEditorProps {
     value?: string;
@@ -27,6 +28,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     const Size: any = Quill.import('attributors/style/size');
     Size.whitelist = fontSizeArr;
     Quill.register(Size, true);
+
+    Quill.register('modules/counter', Counter);
 
     useEffect(() => {
         if (editorRef.current && !ref.current) {
@@ -77,6 +80,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
                             }
                         }
                     },
+                    counter: {
+                        unit: 'char',
+                        limit: 50000,
+                        minimum: 300
+                    }
                 }
             });
 
@@ -101,6 +109,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     return (
         <div className="h-96 w-full">
             <div ref={editorRef} className="overflow-y-auto border border-gray-300 rounded-b-md"/>
+            <div id="counter"/>
         </div>
     );
 };

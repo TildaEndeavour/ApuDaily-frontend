@@ -25,3 +25,7 @@ html, body {
     position: relative;
     overflow: visible !important;
 }
+
+.ql-word-count{
+    margin-left: auto;
+}
