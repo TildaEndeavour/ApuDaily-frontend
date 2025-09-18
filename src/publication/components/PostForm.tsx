@@ -1,6 +1,6 @@
-import ThumbnailLoader from "../../shared/components/ThumbnailLoader.tsx";
+import ThumbnailLoader from "./ThumbnailLoader.tsx";
 import {Save, Trash} from "lucide-react";
-import {TagBubble} from "../../shared/components/TagBubble.tsx";
+import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, type RefObject} from "react";
 import type Category from "../model/Category.ts";

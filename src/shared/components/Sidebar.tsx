@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {House, Menu, Pencil, Search} from "lucide-react";
 import {useNavigate} from "react-router-dom";
-import UserBadge from "./UserBadge.tsx";
+import UserBadge from "../../auth/components/UserBadge.tsx";
 import ModalCard from "./ModalCard.tsx";
 import LoginForm from "../../auth/components/LoginForm.tsx";
 

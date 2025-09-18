@@ -1,6 +1,6 @@
 import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import React, {useState} from "react";
-import type Thumbnail from "../../publication/model/Thumbnail.ts";
+import type Thumbnail from "../model/Thumbnail.ts";
 
 const BASE_URL:string = import.meta.env.VITE_BASE_URL;
 const API_VER:string = import.meta.env.VITE_API_VER;
