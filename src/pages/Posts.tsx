@@ -15,7 +15,7 @@ const Posts = () => {
     const loadMore = async () => {
         setIsLoading(true);
         const nextPage = page + 1;
-        const response = await fetch(import.meta.env.VITE_BASE_URL + '/posts?pageNumber=' + nextPage);
+        const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts?pageNumber=' + nextPage);
         const newPosts = await response.json();
         setHasMore(!newPosts.last);
         setPosts((prevPosts: Post[]) => [...prevPosts, ...newPosts.content]);
@@ -40,16 +40,16 @@ const Posts = () => {
 
     return (
         <div className="w-3/4 h-screen">
-            <div className="flex flex-wrap justify-center gap-12 pt-12">
+            <div className="flex flex-wrap justify-start gap-12 pt-12">
                 {posts.map((post: Post) => {
-                    return <PostCard key={post.id} data={post}/>
+                    return <PostCard key={post.id} post={post}/>
                 })}
             </div>
             {hasMore && (
                 <div ref={loadingRef}>
-                    {isLoading && <p>Загрузка...</p>}
+                    {isLoading && <p>Loading...</p>}
                 </div>
-            )};
+            )}
         </div>
     );
 }

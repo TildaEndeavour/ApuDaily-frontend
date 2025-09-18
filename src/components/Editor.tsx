@@ -1,29 +1,50 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, {type RefObject, useEffect, useRef} from "react";
 import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
+import Thumbnail from "../model/Thumbnail.ts";
+import Counter from "./quill-modules/Counter.ts";
 
 interface QuillEditorProps {
     value?: string;
     onChange?: (value: string) => void;
     options?: QuillOptions;
+    ref: RefObject<Quill | null>;
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
+const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     const editorRef = useRef<HTMLDivElement | null>(null);
-    const quillRef = useRef<Quill | null>(null);
+
+    const fontFamilyArr = ["Times New Roman", "Roboto Condensed", "Calibri", "Calibri Light", "Sans-Serif"];
+    const fonts: any = Quill.import("attributors/style/font");
+    fonts.whitelist = fontFamilyArr;
+    Quill.register(fonts, true);
+
+    const fontSizeArr = ['8px', '10px', '12px','14px',
+                                '16px', '18px', '20px', '22px',
+                                '24px', '26px', '28px', '36px',
+                                '48px', '72px'];
+
+    const Size: any = Quill.import('attributors/style/size');
+    Size.whitelist = fontSizeArr;
+    Quill.register(Size, true);
+
+    Quill.register('modules/counter', Counter);
 
     useEffect(() => {
-        if (editorRef.current && !quillRef.current) {
-            quillRef.current = new Quill(editorRef.current, {
+        if (editorRef.current && !ref.current) {
+            ref.current = new Quill(editorRef.current, {
                 theme: "snow",
                 modules: {
                     toolbar: {
                         container: [
+                            [{font: fontFamilyArr}],
+                            [{ size: fontSizeArr }],
                             [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                            [{ size: ["small", "large", "huge", false] }],
                             ["bold", "italic", "underline"],
-                            ["image", "code-block"],
+                            [{ align: ['', 'center', 'right', 'justify'] }, {list: 'ordered'}, {list: 'bullet'}],
+                            ["link", "image"],
+                            ['clean']
                         ],
                         handlers: {
                             image: function(){
@@ -46,44 +67,49 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange}) => {
                                         }
                                     );
 
-                                    const data = await res.json();
-                                    console.log(data.path);
+                                    const data: Thumbnail = await res.json();
 
-                                    const quill = quillRef.current;
+                                    const quill = ref.current;
                                     if(!quill) return;
                                     const range = quill.getSelection();
                                     if(range){
-                                        quill.insertEmbed(range.index, "image", import.meta.env.VITE_BASE_URL + data.path);
+                                        quill.insertEmbed(range.index, "image", import.meta.env.VITE_BASE_URL + data.url);
                                         quill.setSelection(range.index + 1);
                                     }
                                 }
                             }
                         }
                     },
+                    counter: {
+                        unit: 'char',
+                        limit: 50000,
+                        minimum: 300
+                    }
                 }
             });
 
             if (value) {
-                quillRef.current.root.innerHTML = value;
+                ref.current.root.innerHTML = value;
             }
 
-            quillRef.current.on("text-change", () => {
+            ref.current.on("text-change", () => {
                 if (onChange) {
-                    onChange(quillRef.current!.root.innerHTML);
+                    onChange(ref.current!.root.innerHTML);
                 }
             });
         }
     });
 
     useEffect(() => {
-        if (quillRef.current && value !== undefined && quillRef.current.root.innerHTML !== value) {
-            quillRef.current.root.innerHTML = value;
+        if (ref.current && value !== undefined && ref.current.root.innerHTML !== value) {
+            ref.current.root.innerHTML = value;
         }
     }, [value]);
 
     return (
         <div className="h-96 w-full">
             <div ref={editorRef} className="overflow-y-auto border border-gray-300 rounded-b-md"/>
+            <div id="counter"/>
         </div>
     );
 };

@@ -1,64 +1,142 @@
-import {type FormEvent, useState} from "react";
-import QuillEditor from "../components/Editor.tsx";
-import ThumbnailLoader from "../components/ThumbnailLoader.tsx";
-import {Save, Trash} from "lucide-react";
+import React, {type FormEvent, useRef, useState} from "react";
+import  Category from "../model/Category.ts";
+import {useLoaderData, useNavigate} from "react-router-dom";
+import  Tag from "../model/Tag.ts";
+import {isContentEmpty, isPostTitle, isTag} from "../util/validation.ts";
+import PostForm from "../components/PostForm.tsx";
+import type Quill from "quill";
+import type Thumbnail from "../model/Thumbnail.ts";
+
+const BASE_URL: string = import.meta.env.VITE_BASE_URL;
+const API_VER: string = import.meta.env.VITE_API_VER;
 
 const NewPost = () => {
-    const [content, setContent] = useState("");
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [thumbnail, setThumbnail] = useState<Thumbnail | null>(null);
+    const quillRef = useRef<Quill | null>(null);
+    const [content, setContent] = useState("");
+    const [tags, setTags] = useState<Tag[]>([]);
+    const tagInput = useRef<HTMLInputElement>(null);
+    const categories: Category[] = useLoaderData();
+    const [errors, setErrors] = useState({
+        title: "",
+        tags: "",
+        content: ""
+    });
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+
+        const title = formData.get('title');
+
+        if(!title || !isPostTitle(title.toString())) return setErrors(prevErrors => ({...prevErrors, title: "Please enter valid title"}));
+        else setErrors(prevErrors => ({...prevErrors, title: ""}));
+
+        if(thumbnail) formData.set("thumbnailId", thumbnail.id.toString());
+        else formData.set("thumbnailId", "");
+
+        if(!isContentEmpty(quillRef.current!.getText().trim())) formData.set("content", content);
+        else return setErrors(prevErrors => ({...prevErrors, content: "Please fill publication content"}));
+
+        const category = categories.filter(category => category.slug === formData.get("categoryId"));
+        formData.set("categoryId", category[0].id.toString());
+
+        try {
+            const tags: Tag[] = await loadTagsToServer();
+            formData.set("tagsId", tags.map(tag => tag.id).toString());
+
+            const response = await fetch(BASE_URL + API_VER + '/posts', {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) throw new Error('Failed to submit post');
+            navigate('/posts');
+        } catch (error: unknown) {
+
+            let errorMessage = 'Unknown error';
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                tags: errorMessage === "Tags upload error" ? "Failed to upload tags" : prevErrors.tags,
+                content: errorMessage === "Failed to submit post" ? "Failed to submit post" : prevErrors.content,
+            }));
+        }
 
     }
+
+    const loadTagsToServer = async() => {
+
+        const response = await fetch(BASE_URL + API_VER + "/tags", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(tags.map(tag => tag.name.toLowerCase())),
+        });
+
+        if (!response.ok) throw new Error("Tags upload error");
+
+        return await response.json();
+    }
+
+    const handleAddTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if(event.key === "Enter" && tagInput.current) {
+            event.preventDefault();
+            const value = tagInput.current.value;
+            if (isTag(value) && tags.every(tag => tag.name.toLowerCase() !== value.toLowerCase())){
+                setTags(prevTags => [...prevTags, { id: null, name: value }]);
+                setErrors(prevErrors => ({...prevErrors, tags: ""}));
+                tagInput.current.value = "";
+            }else{
+                setErrors(prevErrors => ({...prevErrors, tags: "Please, enter valid tag"}));
+            }
+        }
+    }
+
+    const handleDeleteTag = (tagToDelete: string) =>
+        setTags(prevTags => prevTags.filter(tag => tag.name !== tagToDelete));
+
+    const handleThumbnailChange = (thumbnail: Thumbnail) => setThumbnail(thumbnail);
+
+    const handleContentChange = (newContent: string) => setContent(newContent);
+
+    const clearTitleError = () => setErrors(prevErrors => ({ ...prevErrors, title: "" }));
+
+    const clearTagsError = () => setErrors(prevErrors => ({ ...prevErrors, tags: "" }));
+
+    const openPreview = () => setIsPreviewOpen(true);
+
+    const closePreview = () => setIsPreviewOpen(false);
+
     return (
         <div className="w-screen h-screen flex flex-col items-center gap-4">
-            <form className="w-3/4 flex flex-col gap-8 mt-12" onSubmit={(event) => handleSubmit(event)}>
-               <div className="flex gap-4">
-                   <ThumbnailLoader/>
-                   <section className="w-full p-4 flex flex-col gap-4">
-                       <p className="flex flex-row border-b-1 pb-2">
-                           <label htmlFor="Title" className="my-auto">Title: </label>
-                           <input name="title" placeholder="Enter title..." className="h-12 p-4 ml-4 flex-grow"/>
-                       </p>
-                       <p className="flex flex-col border-b-1">
-                           <label htmlFor="description" className="my-auto">Description: </label>
-                           <textarea name="description"  placeholder="Enter description" className="h-24 max-h-31 p-4 w-full"/>
-                       </p>
-                   </section>
-                   <section className="flex flex-col gap-4">
-                       <button className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Publish</button>
-                       <button className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Preview</button>
-                       <p className="flex flex-row gap-4 justify-center">
-                           <button className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">
-                               <Save
-                                   size={36}
-                               />
-                           </button>
-                           <button className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-red-300 shadow-2xl/30">
-                               <Trash
-                                   size={36}
-                               />
-                           </button>
-                       </p>
-                   </section>
-               </div>
-                <section className="flex flex-row w-full border-b-1">
-                    <p className="flex flex-row p-4">
-                        <label className="my-auto">Category: </label>
-                        <select className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1">
-                            <option value="basicCategory">Basic category</option>
-                        </select>
-                    </p>
-                    <p className="flex flex-row p-4 w-full">
-                        <label htmlFor="tags" className="my-auto">Tags: </label>
-                        <input name="tags" placeholder="Enter tags..." className="h-12 p-4 ml-4 w-full"/>
-                    </p>
-                </section>
-                <QuillEditor
-                    value={content}
-                    onChange={setContent}
-                />
-            </form>
+            <PostForm
+                handleSubmit={handleSubmit}
+                thumbnail={thumbnail}
+                onThumbnailChange={handleThumbnailChange}
+                editorRef={quillRef}
+                content={content}
+                onContentChange={handleContentChange}
+                tags={tags}
+                onAddTag={handleAddTag}
+                onDeleteTag={handleDeleteTag}
+                tagInputRef={tagInput}
+                categories={categories}
+                errors={errors}
+                onClearTitleError={clearTitleError}
+                onClearTagsError={clearTagsError}
+                isPreviewOpen={isPreviewOpen}
+                onOpenPreview={openPreview}
+                onClosePreview={closePreview}
+            />
         </div>
     );
 }
