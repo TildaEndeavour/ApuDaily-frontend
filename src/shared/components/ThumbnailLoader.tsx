@@ -1,6 +1,6 @@
 import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import React, {useState} from "react";
-import type Thumbnail from "../model/Thumbnail.ts";
+import type Thumbnail from "../../publication/model/Thumbnail.ts";
 
 const BASE_URL:string = import.meta.env.VITE_BASE_URL;
 const API_VER:string = import.meta.env.VITE_API_VER;
@@ -93,7 +93,7 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thu
     );
 
     return (
-        <div className="relative border-dashed border-3 rounded-3xl border-gray-200 hover:border-gray-400 w-112 h-64 shadow-2xl">
+        <div className="relative z-10 border-dashed border-3 rounded-3xl border-gray-200 hover:border-gray-400 w-112 h-64 shadow-2xl">
             {!thumbnail ? thumbnailPlaceholder :
                 (<>
                     <img className="rounded-3xl w-full h-full object-contain"

@@ -2,7 +2,7 @@ import React, {type FormEvent, useRef, useState} from "react";
 import  Category from "../model/Category.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import  Tag from "../model/Tag.ts";
-import {isContentEmpty, isPostTitle, isTag} from "../util/validation.ts";
+import {isContentEmpty, isPostTitle, isTag} from "../../shared/util/validation.ts";
 import PostForm from "../components/PostForm.tsx";
 import type Quill from "quill";
 import type Thumbnail from "../model/Thumbnail.ts";

@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
-import {loader as postLoader} from "../src/pages/Posts.tsx";
-import {loader as categoryLoader} from "../src/model/Category.ts";
-import HomePage from "./pages/Home.tsx";
-import RootLayout from "./components/RootLayout.tsx";
-import Posts from "./pages/Posts.tsx";
-import NewPost from "./pages/NewPost.tsx";
-import ErrorPage from "./pages/ErrorPage.tsx";
+import {loader as postLoader} from "./publication/pages/Posts.tsx";
+import {loader as categoryLoader} from "./publication/model/Category.ts";
+import HomePage from "./shared/pages/Home.tsx";
+import RootLayout from "./shared/components/RootLayout.tsx";
+import Posts from "./publication/pages/Posts.tsx";
+import NewPost from "./publication/pages/NewPost.tsx";
+import ErrorPage from "./shared/pages/ErrorPage.tsx";
+import AuthProvider from "./auth/providers/AuthProvider.tsx";
 
 function App() {
 
@@ -29,7 +30,11 @@ function App() {
         ]}
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+      <AuthProvider>
+          <RouterProvider router={router} />;
+      </AuthProvider>
+  );
 }
 
 export default App

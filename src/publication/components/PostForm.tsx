@@ -1,12 +1,13 @@
-import ThumbnailLoader from "./ThumbnailLoader.tsx";
+import ThumbnailLoader from "../../shared/components/ThumbnailLoader.tsx";
 import {Save, Trash} from "lucide-react";
-import {TagBubble} from "./TagBubble.tsx";
+import {TagBubble} from "../../shared/components/TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, type RefObject} from "react";
 import type Category from "../model/Category.ts";
 import type Quill from "quill";
 import type Thumbnail from "../model/Thumbnail.ts";
-import PostPreview from "./PostPreview.tsx";
+import ModalCard from "../../shared/components/ModalCard.tsx";
+import DOMPurify from "dompurify";
 
 interface PostFormProps {
     handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -74,9 +75,11 @@ const PostForm: React.FC<PostFormProps> = ({
                             className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30"
                             onClick={onOpenPreview}
                     >Preview</button>
-                    <PostPreview isOpen={isPreviewOpen} onClose={onClosePreview}>
-                        {content}
-                    </PostPreview>
+                    <ModalCard isOpen={isPreviewOpen} onClose={onClosePreview}>
+                        <div className="h-full overflow-y-auto ql-editor"
+                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}>
+                        </div>
+                    </ModalCard>
                     <p className="flex flex-row gap-4 justify-center">
                         <button type="button" className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">
                             <Save

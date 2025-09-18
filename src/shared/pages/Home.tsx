@@ -1,4 +1,4 @@
-import ApuLogo from "../assets/images/logo.png"
+import ApuLogo from "../../assets/images/logo.png"
 import ModeButton from "../components/ModeButton.tsx";
 
 const HomePage = () => {
