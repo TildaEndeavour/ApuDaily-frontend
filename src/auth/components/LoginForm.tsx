@@ -20,11 +20,12 @@ const LoginForm = () => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setFormValidator(validateLoginForm(formData));
-        if (formValidator && !formValidator.isValid) return;
+        if (!formValidator?.isValid) return;
 
         try {
             const response = await login(formData);
             if (response.status === 200) setToken(response.body.token);
+            console.log(response.body.token)
         } catch (error: unknown) {
             console.log(error);
         }
@@ -38,44 +39,46 @@ const LoginForm = () => {
         });
     };
     return (
-        <form onSubmit={(event) => handleSubmit(event)}
-            className="w-80 h-fit mt-6 flex flex-col items-center gap-4">
-            <h1 className="text-lg font-bold">Log-in</h1>
-            <input
-                id="usernameOrEmail"
-                name="usernameOrEmail"
-                placeholder="Login"
-                className="border-1 h-fit p-4 ml-4 rounded-3xl"
-                onChange={handleChange}
-            />
-            {(!formValidator?.isValid && formValidator?.messages.usernameOrEmail) &&
-                <div className="text-xs text-red-900">{formValidator.messages.usernameOrEmail}</div>}
-            <input
-                id="password"
-                name="password"
-                placeholder="Password"
-                className="border-1 h-fit p-4 ml-4 rounded-3xl"
-                onChange={handleChange}
-            />
-            {(!formValidator?.isValid && formValidator?.messages.password) &&
-                <div className="text-xs text-red-900">{formValidator.messages.password}</div>}
-            <button
-                type="submit"
-                className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
-            >
-                Log-in
-            </button>
-            <button
-                type="button"
-                className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
-                onClick={() => setIsSignUpOpen(true)}
-            >
-                Sign-up
-            </button>
+        <>
+            <form onSubmit={(event) => handleSubmit(event)}
+                  className="w-80 h-fit mt-6 flex flex-col items-center gap-4">
+                <h1 className="text-lg font-bold">Log-in</h1>
+                <input
+                    id="usernameOrEmail"
+                    name="usernameOrEmail"
+                    placeholder="Login"
+                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    onChange={handleChange}
+                />
+                {(!formValidator?.isValid && formValidator?.messages.usernameOrEmail) &&
+                    <div className="text-xs text-red-900">{formValidator.messages.usernameOrEmail}</div>}
+                <input
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    onChange={handleChange}
+                />
+                {(!formValidator?.isValid && formValidator?.messages.password) &&
+                    <div className="text-xs text-red-900">{formValidator.messages.password}</div>}
+                <button
+                    type="submit"
+                    className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
+                >
+                    Log-in
+                </button>
+                <button
+                    type="button"
+                    className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
+                    onClick={() => setIsSignUpOpen(true)}
+                >
+                    Sign-up
+                </button>
+            </form>
             <ModalCard isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
                 <SignUpForm/>
             </ModalCard>
-        </form>
+        </>
     );
 }
 
