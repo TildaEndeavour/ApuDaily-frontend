@@ -1,4 +1,5 @@
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
+import type {LoginInputs, SignUpInputs} from "../model/AuthFormInputs.ts";
 
 const containsForbiddenChars = (str: string, forbiddenChars: string[]) => {
     for(const char of str){
@@ -100,17 +101,28 @@ export const validatePassword = (password:string) => {
     return message;
 };
 
-export const validateLoginForm = (usernameOrEmail: string, password: string): FormValidator => {
+export const validateLoginForm = (inputs: LoginInputs): FormValidator => {
     const validators = {
-        usernameOrEmail: validateUsernameOrEmail(usernameOrEmail),
-        password: validatePassword(password),
+        usernameOrEmail: validateUsernameOrEmail(inputs.usernameOrEmail),
+        password: validatePassword(inputs.password),
     };
 
     return {
         isValid: Object.values(validators).every((error) => error === ''),
-        messages: [
-            {usernameOrEmail: validators.usernameOrEmail},
-            {password: validators.password}
-        ]
+        messages: validators
     }
 };
+
+export const validateSignUpForm = (inputs: SignUpInputs): FormValidator => {
+    const validators = {
+        username: validateUsername(inputs.username),
+        email: validateEmail(inputs.email),
+        password: validatePassword(inputs.password),
+        confirmPassword: (inputs.password !== inputs.confirmPassword) ? "Passwords don't match" : ''
+    };
+
+    return {
+        isValid: Object.values(validators).every((error) => error === ''),
+        messages: validators
+    }
+}

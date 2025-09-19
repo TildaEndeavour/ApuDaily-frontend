@@ -5,11 +5,12 @@ import {useAuth} from "../providers/AuthProvider.tsx";
 import {validateLoginForm} from "../services/validation.ts";
 import {login} from "../services/auth.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
+import type {LoginInputs} from "../model/AuthFormInputs.ts";
 
 const LoginForm = () => {
 
-    const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-    const [formData, setFormData] = useState({
+    const [isSignUpOpen, setIsSignUpOpen] = useState<boolean>(false);
+    const [formData, setFormData] = useState<LoginInputs>({
         usernameOrEmail: '',
         password: ''
     })
@@ -18,8 +19,7 @@ const LoginForm = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setFormValidator(validateLoginForm(formData.usernameOrEmail, formData.password));
-
+        setFormValidator(validateLoginForm(formData));
         if (formValidator && !formValidator.isValid) return;
 
         try {
@@ -48,8 +48,8 @@ const LoginForm = () => {
                 className="border-1 h-fit p-4 ml-4 rounded-3xl"
                 onChange={handleChange}
             />
-            {(!formValidator?.isValid && formValidator?.messages[0]["usernameOrEmail"]) &&
-                <div className="text-xs text-red-900">{formValidator.messages[0]["usernameOrEmail"]}</div>}
+            {(!formValidator?.isValid && formValidator?.messages.usernameOrEmail) &&
+                <div className="text-xs text-red-900">{formValidator.messages.usernameOrEmail}</div>}
             <input
                 id="password"
                 name="password"
@@ -57,8 +57,8 @@ const LoginForm = () => {
                 className="border-1 h-fit p-4 ml-4 rounded-3xl"
                 onChange={handleChange}
             />
-            {(!formValidator?.isValid && formValidator?.messages[1]["password"]) &&
-                <div className="text-xs text-red-900">{formValidator.messages[1]["password"]}</div>}
+            {(!formValidator?.isValid && formValidator?.messages.password) &&
+                <div className="text-xs text-red-900">{formValidator.messages.password}</div>}
             <button
                 type="submit"
                 className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
