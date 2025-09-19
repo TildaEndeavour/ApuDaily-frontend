@@ -1,3 +1,5 @@
+import type {FormValidator} from "../../shared/model/FormValidator.ts";
+
 const containsForbiddenChars = (str: string, forbiddenChars: string[]) => {
     for(const char of str){
         if(forbiddenChars.includes(char)){
@@ -13,7 +15,7 @@ export const validateUsername = (username: string) => {
     const maxLength = 20;
     let message = '';
 
-    if(username !== '' && username !== null && username !== undefined){
+    if(username !== null && username !== undefined){
         if(username.length < minLength || username.length > maxLength){
             message += 'Length should be between ' + minLength + ' and ' + maxLength + ' characters.';
         }
@@ -32,7 +34,7 @@ export const validateEmail = (email:string) => {
     const maxEmailLength = 60;
     let message = '';
 
-    if (email !== '' && email !== null && email !== undefined) {
+    if (email !== null && email !== undefined) {
         if (email.includes('@')) {
             const [localPart, domain] = email.split('@', 2);
 
@@ -68,7 +70,7 @@ export const validateEmail = (email:string) => {
 export const validateUsernameOrEmail = (title:string) => {
     let message = '';
 
-    if (title !== '' && title !== null && title !== undefined) {
+    if (title !== null && title !== undefined) {
         if (title.includes('@')) {
             message += validateEmail(title);
         } else {
@@ -85,7 +87,7 @@ export const validatePassword = (password:string) => {
     const maxLength = 20;
     let message = '';
 
-    if (password !== '' && password !== null && password !== undefined) {
+    if (password !== null && password !== undefined) {
         if (password.length < minLength || password.length > maxLength) {
             message += 'Length should be between ' + minLength + ' and ' + maxLength + ' characters. ';
         }
@@ -96,4 +98,19 @@ export const validatePassword = (password:string) => {
     }
 
     return message;
+};
+
+export const validateLoginForm = (usernameOrEmail: string, password: string): FormValidator => {
+    const validators = {
+        usernameOrEmail: validateUsernameOrEmail(usernameOrEmail),
+        password: validatePassword(password),
+    };
+
+    return {
+        isValid: Object.values(validators).every((error) => error === ''),
+        messages: [
+            {usernameOrEmail: validators.usernameOrEmail},
+            {password: validators.password}
+        ]
+    }
 };

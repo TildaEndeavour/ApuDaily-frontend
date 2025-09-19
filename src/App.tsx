@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {loader as postLoader} from "./publication/pages/Posts.tsx";
 import {loader as categoryLoader} from "./publication/model/Category.ts";
-import HomePage from "./shared/pages/Home.tsx";
+import HomePage from "./home/pages/Home.tsx";
 import RootLayout from "./shared/components/RootLayout.tsx";
 import Posts from "./publication/pages/Posts.tsx";
 import NewPost from "./publication/pages/NewPost.tsx";
