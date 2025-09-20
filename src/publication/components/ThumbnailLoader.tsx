@@ -2,9 +2,6 @@ import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import React, {useState} from "react";
 import type Thumbnail from "../model/Thumbnail.ts";
 
-const BASE_URL:string = import.meta.env.VITE_BASE_URL;
-const API_VER:string = import.meta.env.VITE_API_VER;
-
 const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thumbnail:Thumbnail) => void}> = ({thumbnail, setThumbnail}) => {
 
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +12,7 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thu
         const formData = new FormData();
         formData.append("file",file);
 
-        return await fetch(BASE_URL + API_VER + '/upload',
+        return await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
             {
                 method: "POST",
                 body: formData
@@ -98,7 +95,7 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thu
                 (<>
                     <img className="rounded-3xl w-full h-full object-contain"
                          alt="Thumbnail"
-                         src={BASE_URL + thumbnail.url}
+                         src={import.meta.env.VITE_BASE_URL + thumbnail.url}
                     />
                     <p className="absolute inset-0 hover:animate-spin flex items-center justify-center"
                        onClick={loadHandler}

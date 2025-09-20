@@ -12,24 +12,24 @@ interface QuillEditorProps {
     ref: RefObject<Quill | null>;
 }
 
+const fontFamilyArr = ["Times New Roman", "Roboto Condensed", "Calibri", "Calibri Light", "Sans-Serif"];
+const fonts: any = Quill.import("attributors/style/font");
+fonts.whitelist = fontFamilyArr;
+Quill.register(fonts, true);
+
+const fontSizeArr = ['8px', '10px', '12px','14px',
+    '16px', '18px', '20px', '22px',
+    '24px', '26px', '28px', '36px',
+    '48px', '72px'];
+
+const Size: any = Quill.import('attributors/style/size');
+Size.whitelist = fontSizeArr;
+Quill.register(Size, true);
+
+Quill.register('modules/counter', Counter);
+
 const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     const editorRef = useRef<HTMLDivElement | null>(null);
-
-    const fontFamilyArr = ["Times New Roman", "Roboto Condensed", "Calibri", "Calibri Light", "Sans-Serif"];
-    const fonts: any = Quill.import("attributors/style/font");
-    fonts.whitelist = fontFamilyArr;
-    Quill.register(fonts, true);
-
-    const fontSizeArr = ['8px', '10px', '12px','14px',
-                                '16px', '18px', '20px', '22px',
-                                '24px', '26px', '28px', '36px',
-                                '48px', '72px'];
-
-    const Size: any = Quill.import('attributors/style/size');
-    Size.whitelist = fontSizeArr;
-    Quill.register(Size, true);
-
-    Quill.register('modules/counter', Counter);
 
     useEffect(() => {
         if (editorRef.current && !ref.current) {

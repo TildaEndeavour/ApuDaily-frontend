@@ -7,7 +7,7 @@ import {login} from "../services/auth.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {LoginInputs} from "../model/AuthFormInputs.ts";
 
-const LoginForm = () => {
+const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
 
     const [isSignUpOpen, setIsSignUpOpen] = useState<boolean>(false);
     const [formData, setFormData] = useState<LoginInputs>({
@@ -19,13 +19,14 @@ const LoginForm = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setFormValidator(validateLoginForm(formData));
-        if (!formValidator?.isValid) return;
+        const validator = validateLoginForm(formData);
+        setFormValidator(validator);
+        if (!validator.isValid) return;
 
         try {
             const response = await login(formData);
             if (response.status === 200) setToken(response.body.token);
-            console.log(response.body.token)
+            onClose();
         } catch (error: unknown) {
             console.log(error);
         }
@@ -38,6 +39,7 @@ const LoginForm = () => {
             [name]: value,
         });
     };
+
     return (
         <>
             <form onSubmit={(event) => handleSubmit(event)}

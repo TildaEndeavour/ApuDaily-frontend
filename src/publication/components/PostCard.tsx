@@ -1,5 +1,5 @@
 import {ImageOff} from "lucide-react";
-import Post from "../model/Post.ts";
+import type {Post} from "../model/Post.ts";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
@@ -17,7 +17,7 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
                     </div>
                 )}
             </section>
-            <p className="mt-3 mb-4 text-sm text-gray-800">{post.author ? post.author.nickname : "Anonym"}</p>
+            <p className="mt-3 mb-4 text-sm text-gray-800">{post.author ? post.author.username : "Anonym"}</p>
             <section className="gap-4 flex flex-col h-60">
                 <p className="text-lg font-semibold">{post.title}</p>
                 <p>{post.description}</p>

@@ -1,7 +1,8 @@
-import {UserRoundX} from "lucide-react";
+import {UserRoundCheck, UserRoundX} from "lucide-react";
 import React from "react";
+import type User from "../model/User.ts";
 
-const UserBadge: React.FC<{onLogin: () => void}> = ({onLogin}) => {
+const UserBadge: React.FC<{onLogin: () => void, data: User | undefined}> = ({onLogin, data}) => {
 
     return (
         <section className="mb-12 flex flex-col items-center justify-center">
@@ -9,10 +10,13 @@ const UserBadge: React.FC<{onLogin: () => void}> = ({onLogin}) => {
                 <button className="flex flex-col justify-center items-center"
                         onClick={onLogin}
                 >
-                    <UserRoundX size={36} strokeWidth={1}/>
+                    {data
+                        ?<UserRoundCheck size={36} strokeWidth={1}/>
+                        :<UserRoundX size={36} strokeWidth={1}/>
+                    }
                 </button>
             </div>
-            <p className="mb-2">Anonym</p>
+            <p className="mb-2">{data ? data.username : "Anonym"}</p>
         </section>
     );
 }

@@ -9,6 +9,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+
+    const initialToken = localStorage.getItem('token');
+    if (initialToken) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${initialToken}`;
+    }
     const [token, setToken_] = useState(localStorage.getItem('token'));
 
     const setToken = (newToken: string) => {
@@ -17,7 +22,7 @@ const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
 
     useEffect(() => {
         if(token) {
-            axios.defaults.headers.common["Authorization"] = "Bearer" + token;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             localStorage.setItem('token', token);
         } else {
             delete axios.defaults.headers.common["Authorization"];

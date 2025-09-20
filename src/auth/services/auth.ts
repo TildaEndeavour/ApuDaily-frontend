@@ -1,4 +1,5 @@
 import {LoginRequest, SignUpRequest} from "../model/Requests.ts";
+import axios from "axios";
 
 export const login = async(requestBody: LoginRequest) => {
     const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/auth/login', {
@@ -31,3 +32,12 @@ export const signUp = async(requestBody: SignUpRequest) => {
         body: data
     };
 };
+
+export const getUserDetails = async() =>{
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users');
+
+    return {
+        status: response.status,
+        body: response.data,
+    };
+}
