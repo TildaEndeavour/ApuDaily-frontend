@@ -1,7 +1,7 @@
 import {useLoaderData} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
-import type Post from "../model/Post.ts";
 import {useEffect, useRef, useState} from "react";
+import type {Post} from "../model/Post.ts";
 
 const Posts = () => {
 
@@ -40,7 +40,7 @@ const Posts = () => {
 
     return (
         <div className="w-3/4 h-screen">
-            <div className="flex flex-wrap justify-start gap-12 pt-12">
+            <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
                 {posts.map((post: Post) => {
                     return <PostCard key={post.id} post={post}/>
                 })}

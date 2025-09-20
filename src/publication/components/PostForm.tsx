@@ -11,12 +11,14 @@ import {isTag} from "../services/validation.ts";
 import type {Post} from "../model/Post.ts";
 import {useLoaderData} from "react-router-dom";
 import type {Category} from "../model/Category.ts";
+import type {FormValidator} from "../../shared/model/FormValidator.ts";
 
 const PostForm: React.FC<{
     post: Post,
+    errors: FormValidator,
     onChangePost: (post: Post) => void,
     onSubmitPost: (event: FormEvent<HTMLFormElement>) => void
-    }> = ({post,onChangePost, onSubmitPost}) => {
+    }> = ({post, errors, onChangePost, onSubmitPost}) => {
 
     const availableCategories = useLoaderData();
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -59,14 +61,15 @@ const PostForm: React.FC<{
                     setThumbnail={handleThumbnailChange}
                 />
                 <section className="w-full p-4 flex flex-col gap-4">
-                    <p className="flex flex-row border-b-1 pb-2">
+                    <div className="flex flex-row border-b-1 pb-2 items-center">
                         <label htmlFor="Title" className="my-auto">Title: </label>
                         <input
                             name="title" placeholder="Enter title..."
                             className="h-12 p-4 ml-4 flex-grow rounded-3xl"
                             onChange={(e) => updatePostField("title", e.target.value)}
                         />
-                    </p>
+                    </div>
+                    {errors?.messages.title && <div className="ml-1 text-xs text-red-900">{errors.messages.title}</div>}
                     <p className="flex flex-col border-b-1">
                         <label htmlFor="description" className="my-auto">Description: </label>
                         <textarea
@@ -103,18 +106,20 @@ const PostForm: React.FC<{
                 </section>
             </div>
             <section className="flex flex-row w-full border-b-1">
-                <p className="flex flex-row p-4">
+                <div className="flex flex-row p-4">
                     <label htmlFor="categoryId" className="my-auto">Category: </label>
                     <select
                         name="categoryId"
                         className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1"
                         onChange={handleCategoryChange}
+                        defaultValue=""
                     >
+                        <option value="" disabled hidden>Select category</option>
                         {availableCategories.map((category: Category) => {
                             return <option key={category.slug} value={category.slug}>{category.name}</option>
                         })}
                     </select>
-                </p>
+                </div>
                 <p className="flex flex-row p-4 w-full">
                     <label htmlFor="tagsId" className="my-auto">Tags: </label>
                     <input name="tagsId"
@@ -131,11 +136,13 @@ const PostForm: React.FC<{
                     />
                 </p>
             </section>
+            {errors?.messages.category && <div className="ml-1 text-xs text-red-900">{errors.messages.category}</div>}
             <section className="overflow-x-auto flex flex-row gap-1">
                 {post.tags && post.tags.map(tag => {
                     return <TagBubble key={tag.name} name={tag.name} onDelete={() => removeTag(tag.name)}/>
                 })}
             </section>
+            {errors?.messages.content && <div className="text-xs text-red-900">{errors.messages.content}</div>}
             <QuillEditor
                 ref={editorRef}
                 value={post.content}

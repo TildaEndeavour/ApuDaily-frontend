@@ -32,7 +32,10 @@ export const uploadPost = async(post: PostCreateRequestDto) => {
             }
         );
 
-        return response.data;
+        return {
+            status: response.status,
+            body: response.data
+        };
     } catch (error: unknown) {
         throw new Error("Post upload error");
     }

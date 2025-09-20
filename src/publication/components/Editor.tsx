@@ -94,7 +94,12 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
 
             ref.current.on("text-change", () => {
                 if (onChange) {
-                    onChange(ref.current!.root.innerHTML);
+                    const text = ref.current!.getText().trim();
+                    if (text === "") {
+                        onChange("");
+                    } else {
+                        onChange(ref.current!.root.innerHTML);
+                    }
                 }
             });
         }
