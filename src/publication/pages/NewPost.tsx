@@ -7,6 +7,7 @@ import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import {uploadPost} from "../services/requests.ts";
 import {useNavigate} from "react-router-dom";
 import {getUserDetails} from "../../auth/services/auth.ts";
+import type User from "../../auth/model/User.ts";
 
 const NewPost = () => {
 
@@ -37,11 +38,19 @@ const NewPost = () => {
             return;
         }
 
-        const authorResponse = await getUserDetails();
-        const author = authorResponse.body;
+        let author: User | null = null;
+
+        try {
+            const authorResponse = await getUserDetails();
+            if (authorResponse.status === 200) {
+                author = authorResponse.body;
+            }
+        } catch (e) {
+            console.error('User loading error', e);
+        }
 
         const request: PostCreateRequestDto = {
-            authorId: author.id,
+            authorId: author ? author.id : null,
             thumbnailId: post.thumbnail?.id,
             title: post.title,
             description: post.description,
@@ -49,8 +58,6 @@ const NewPost = () => {
             categoryId: post.category!.id,
             tagsId: post.tags!.flatMap(tag => tag.id !== null ? [tag.id] : [])
         }
-
-        console.log(request);
 
         const response = await uploadPost(request);
         if(response.status === 200) navigate('/posts');

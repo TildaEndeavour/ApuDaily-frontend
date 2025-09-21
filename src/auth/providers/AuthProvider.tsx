@@ -1,32 +1,40 @@
 import axios from "axios";
-import React, {createContext, useContext, useEffect, useMemo, useState} from "react";
+import React, {createContext, useCallback, useContext, useMemo, useState} from "react";
 
 interface AuthContextType {
     token: string | null;
     setToken: (newToken: string) => void;
+    removeToken: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
 
-    const initialToken = localStorage.getItem('token');
-    if (initialToken) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${initialToken}`;
-    }
     const [token, setToken_] = useState(localStorage.getItem('token'));
 
-    const setToken = (newToken: string) => {
+    const initialToken = localStorage.getItem('token');
+    if (initialToken) axios.defaults.headers.common["Authorization"] = `Bearer ${initialToken}`;
+
+    const setToken = useCallback((newToken: string) => {
         localStorage.setItem('token', newToken);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         setToken_(newToken);
-    }
+    }, []);
+
+    const removeToken = useCallback(() => {
+        localStorage.removeItem("token");
+        delete axios.defaults.headers.common["Authorization"];
+        setToken_(null);
+    }, []);
 
     const contextValue = useMemo(
         () => ({
             token,
             setToken,
+            removeToken
         }),
-        [token]
+        [token, setToken, removeToken]
     );
 
     return(

@@ -2,13 +2,12 @@ import ThumbnailLoader from "./ThumbnailLoader.tsx";
 import {Save, Trash} from "lucide-react";
 import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
-import React, {type FormEvent, useRef, useState} from "react";
+import React, {type FormEvent, useEffect, useRef, useState} from "react";
 import type Quill from "quill";
 import ModalCard from "../../shared/components/ModalCard.tsx";
 import DOMPurify from "dompurify";
 import {isTag} from "../services/validation.ts";
-import {useLoaderData} from "react-router-dom";
-import type {Category} from "../model/Category.ts";
+import {type Category, loader as loadAvailableCategories} from "../model/Category.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {Post} from "../model/Post.ts";
 
@@ -19,7 +18,8 @@ const PostForm: React.FC<{
     onSubmitPost: (event: FormEvent<HTMLFormElement>) => void
     }> = ({post, errors, onChangePost, onSubmitPost}) => {
 
-    const availableCategories = useLoaderData();
+    const [loading, setLoading] = useState(true);
+    const [availableCategories, setAvailableCategories] = useState<Category[] | null>(null);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const editorRef = useRef<Quill>(null);
@@ -44,6 +44,32 @@ const PostForm: React.FC<{
         updatePostField("tags", post.tags?.filter(tag => tag.name !== name) ?? []);
     };
 
+    useEffect(() => {
+        let isMounted = true;
+
+        async function loadCategories() {
+            try {
+                const res = await loadAvailableCategories();
+                const data = res.body;
+                if (isMounted) {
+                    setAvailableCategories(data);
+                }
+            } catch (err) {
+                console.error("Loading categories error", err);
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        loadCategories();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+
     return (
         <form className="w-3/4 flex flex-col gap-4 mt-12" onSubmit={(event) => onSubmitPost(event)}>
             <div className="flex gap-4">
@@ -53,8 +79,9 @@ const PostForm: React.FC<{
                 />
                 <section className="w-full p-4 flex flex-col gap-4">
                     <div className="flex flex-row border-b-1 pb-2 items-center">
-                        <label htmlFor="Title" className="my-auto">Title: </label>
+                        <label htmlFor="title" className="my-auto">Title: </label>
                         <input
+                            id="title"
                             name="title" placeholder="Enter title..."
                             className="h-12 p-4 ml-4 flex-grow rounded-3xl"
                             onChange={(e) => updatePostField("title", e.target.value)}
@@ -64,6 +91,7 @@ const PostForm: React.FC<{
                     <p className="flex flex-col border-b-1">
                         <label htmlFor="description" className="my-auto">Description: </label>
                         <textarea
+                            id="description"
                             name="description"
                             placeholder="Enter description"
                             className="h-24 max-h-31 p-4 w-full"
@@ -78,7 +106,7 @@ const PostForm: React.FC<{
                             onClick={() => setIsPreviewOpen(true)}
                     >Preview</button>
                     <ModalCard isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-                        <div className="h-full overflow-y-auto ql-editor"
+                        <div className="h-fit w-220"
                              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}>
                         </div>
                     </ModalCard>
@@ -100,22 +128,32 @@ const PostForm: React.FC<{
                 <div className="flex flex-row p-4">
                     <label htmlFor="categoryId" className="my-auto">Category: </label>
                     <select
+                        id="categoryId"
                         name="categoryId"
                         className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1"
                         onChange={(e) =>
-                            updatePostField("category", availableCategories.find((c: Category) => c.slug === e.target.value))
+                            updatePostField(
+                                "category",
+                                availableCategories?.find((c: Category) => c.slug === e.target.value) ?? null
+                            )
                         }
                         defaultValue=""
                     >
                         <option value="" disabled hidden>Select category</option>
-                        {availableCategories.map((category: Category) => {
-                            return <option key={category.slug} value={category.slug}>{category.name}</option>
-                        })}
+                        {loading
+                            ? <option disabled>Loading...</option>
+                            : availableCategories?.map((category: Category) => (
+                                <option key={category.slug} value={category.slug}>
+                                    {category.name}
+                                </option>
+                            ))
+                        }
                     </select>
                 </div>
                 <p className="flex flex-row p-4 w-full">
                     <label htmlFor="tagsId" className="my-auto">Tags: </label>
-                    <input name="tagsId"
+                    <input id="tagsId"
+                           name="tagsId"
                            placeholder="Append tag"
                            ref={tagRef}
                            onKeyDown={(e) => {

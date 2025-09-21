@@ -2,7 +2,6 @@ import {useLoaderData} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
-import axios from "axios";
 
 const Posts = () => {
 
@@ -39,8 +38,6 @@ const Posts = () => {
         return () => observer.disconnect();
     });
 
-    console.log(posts);
-
     return (
         <div className="w-3/4 h-screen">
             <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
@@ -58,13 +55,3 @@ const Posts = () => {
 }
 
 export default Posts;
-
-export async function loader() {
-    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts');
-
-    console.log(response);
-    return {
-        status: response.status,
-        body: response.data,
-    };
-}

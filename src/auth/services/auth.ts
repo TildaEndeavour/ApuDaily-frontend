@@ -34,6 +34,7 @@ export const signUp = async(requestBody: SignUpRequest) => {
 };
 
 export const getUserDetails = async() =>{
+
     const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users');
 
     return {

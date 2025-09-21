@@ -1,22 +1,33 @@
-import {UserRoundCheck, UserRoundX} from "lucide-react";
+import {LogIn, LogOut, UserRoundCheck, UserRoundX} from "lucide-react";
 import React from "react";
 import type User from "../model/User.ts";
 
-const UserBadge: React.FC<{onLogin: () => void, data: User | undefined}> = ({onLogin, data}) => {
+const UserBadge: React.FC<{
+    onLogin: () => void,
+    onLogOut: () => void,
+    data: User | undefined,
+    isCollapsed: boolean
+}> = ({onLogin, onLogOut, data, isCollapsed}) => {
 
     return (
         <section className="mb-12 flex flex-col items-center justify-center">
             <div className="p-2 rounded-full bg-gray-200">
-                <button className="flex flex-col justify-center items-center"
-                        onClick={onLogin}
+                <div className="flex flex-col justify-center items-center"
+
                 >
                     {data
                         ?<UserRoundCheck size={36} strokeWidth={1}/>
                         :<UserRoundX size={36} strokeWidth={1}/>
                     }
-                </button>
+                </div>
             </div>
-            <p className="mb-2">{data ? data.username : "Anonym"}</p>
+            <p className="mb-4 mt-2">
+                {!isCollapsed ? data?.username ?? "Anonym" : "…"}
+            </p>
+            {data
+                ? <button onClick={onLogOut}><LogOut size={24} strokeWidth={1} style={{ transform: "scaleX(-1)" }}/></button>
+                : <button onClick={onLogin}><LogIn size={24} strokeWidth={1}/></button>
+            }
         </section>
     );
 }
