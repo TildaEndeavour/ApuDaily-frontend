@@ -30,6 +30,8 @@ const NewPost = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        console.log(post);
+
         const postFormValidator = validatePostForm(post);
         setErrors(postFormValidator);
         if(!postFormValidator.isValid){

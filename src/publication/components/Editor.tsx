@@ -4,10 +4,11 @@ import Quill, { type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import Thumbnail from "../model/Thumbnail.ts";
 import Counter from "./quill-modules/Counter.ts";
+import type {Post} from "../model/Post.ts";
 
 interface QuillEditorProps {
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: <K extends keyof Post>(key: K, value: Post[K]) => void;
     options?: QuillOptions;
     ref: RefObject<Quill | null>;
 }
@@ -96,9 +97,9 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
                 if (onChange) {
                     const text = ref.current!.getText().trim();
                     if (text === "") {
-                        onChange("");
+                        onChange("content","");
                     } else {
-                        onChange(ref.current!.root.innerHTML);
+                        onChange("content", ref.current!.root.innerHTML);
                     }
                 }
             });

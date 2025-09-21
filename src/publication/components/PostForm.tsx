@@ -4,7 +4,6 @@ import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, useRef, useState} from "react";
 import type Quill from "quill";
-import type Thumbnail from "../model/Thumbnail.ts";
 import ModalCard from "../../shared/components/ModalCard.tsx";
 import DOMPurify from "dompurify";
 import {isTag} from "../services/validation.ts";
@@ -23,24 +22,16 @@ const PostForm: React.FC<{
     const availableCategories = useLoaderData();
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-    const editorRef = useRef<Quill | null>(null);
+    const editorRef = useRef<Quill>(null);
     const tagRef = useRef<HTMLInputElement>(null);
 
     const updatePostField = <K extends keyof Post>(key: K, value: Post[K]) => {
-        onChangePost({ ...post, [key]: value });
-    };
-
-    const handleThumbnailChange = (thumbnail: Thumbnail) => {
-        const updatedPost: Post = {
-            ...post,
-            thumbnail: thumbnail
-        }
-        onChangePost(updatedPost);
-    }
-
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCategory = availableCategories.find((c: Category) => c.slug === e.target.value);
-        if (selectedCategory) updatePostField("category", selectedCategory);
+        onChangePost((prevPost: Post) => {
+            return {
+                ...prevPost,
+                [key]: value
+            };
+        });
     };
 
     const addTag = (name: string) => {
@@ -58,7 +49,7 @@ const PostForm: React.FC<{
             <div className="flex gap-4">
                 <ThumbnailLoader
                     thumbnail={post.thumbnail ? post.thumbnail : null}
-                    setThumbnail={handleThumbnailChange}
+                    setThumbnail={updatePostField}
                 />
                 <section className="w-full p-4 flex flex-col gap-4">
                     <div className="flex flex-row border-b-1 pb-2 items-center">
@@ -111,7 +102,9 @@ const PostForm: React.FC<{
                     <select
                         name="categoryId"
                         className="ml-2 p-2 w-44 rounded-2xl border-gray-200 border-1"
-                        onChange={handleCategoryChange}
+                        onChange={(e) =>
+                            updatePostField("category", availableCategories.find((c: Category) => c.slug === e.target.value))
+                        }
                         defaultValue=""
                     >
                         <option value="" disabled hidden>Select category</option>
@@ -146,7 +139,7 @@ const PostForm: React.FC<{
             <QuillEditor
                 ref={editorRef}
                 value={post.content}
-                onChange={(content) => updatePostField("content", content)}
+                onChange={updatePostField}
             />
         </form>
     );

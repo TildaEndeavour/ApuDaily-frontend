@@ -1,8 +1,9 @@
 import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import React, {useState} from "react";
 import type Thumbnail from "../model/Thumbnail.ts";
+import type {Post} from "../model/Post.ts";
 
-const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thumbnail:Thumbnail) => void}> = ({thumbnail, setThumbnail}) => {
+const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K extends keyof Post>(key: K, value: Post[K]) => void}> = ({thumbnail, setThumbnail}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -40,7 +41,7 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thu
                 return;
             }
 
-            setThumbnail(data);
+            setThumbnail("thumbnail", data);
             setError(null);
         }
         setIsLoading(false);
@@ -64,7 +65,7 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: (thu
             return;
         }
 
-        setThumbnail(data);
+        setThumbnail("thumbnail", data);
         setError(null);
     }
 
