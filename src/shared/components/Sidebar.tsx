@@ -21,10 +21,18 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        if(!token) return;
+        if (!token) return;
+
         (async () => {
-            const { body } = await getUserDetails();
-            setUser(body);
+            try {
+                const response = await getUserDetails();
+                if (response.status === 200) {
+                    setUser(response.body);
+                }
+            } catch (error) {
+                console.error("Error in getUserDetails:", error);
+                localStorage.removeItem('token');
+            }
         })();
     }, [token]);
 

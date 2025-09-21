@@ -7,15 +7,15 @@ import type Quill from "quill";
 import ModalCard from "../../shared/components/ModalCard.tsx";
 import DOMPurify from "dompurify";
 import {isTag} from "../services/validation.ts";
-import type {Post} from "../model/Post.ts";
 import {useLoaderData} from "react-router-dom";
 import type {Category} from "../model/Category.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
+import type {Post} from "../model/Post.ts";
 
 const PostForm: React.FC<{
     post: Post,
     errors: FormValidator,
-    onChangePost: (post: Post) => void,
+    onChangePost: React.Dispatch<React.SetStateAction<Post>>,
     onSubmitPost: (event: FormEvent<HTMLFormElement>) => void
     }> = ({post, errors, onChangePost, onSubmitPost}) => {
 
