@@ -6,12 +6,13 @@ import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import {uploadPost} from "../services/requests.ts";
 import {useNavigate} from "react-router-dom";
+import {getUserDetails} from "../../auth/services/auth.ts";
 
 const NewPost = () => {
 
     const [post, setPost] = useState<Post>({
         id: null,
-        author: null,
+        user: null,
         thumbnail: null,
         title: "",
         description: "",
@@ -30,15 +31,17 @@ const NewPost = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        console.log(post);
-
         const postFormValidator = validatePostForm(post);
         setErrors(postFormValidator);
         if(!postFormValidator.isValid){
             return;
         }
 
+        const authorResponse = await getUserDetails();
+        const author = authorResponse.body;
+
         const request: PostCreateRequestDto = {
+            authorId: author.id,
             thumbnailId: post.thumbnail?.id,
             title: post.title,
             description: post.description,
@@ -46,6 +49,8 @@ const NewPost = () => {
             categoryId: post.category!.id,
             tagsId: post.tags!.flatMap(tag => tag.id !== null ? [tag.id] : [])
         }
+
+        console.log(request);
 
         const response = await uploadPost(request);
         if(response.status === 200) navigate('/posts');

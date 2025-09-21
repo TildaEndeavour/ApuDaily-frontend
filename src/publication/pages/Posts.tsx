@@ -2,10 +2,11 @@ import {useLoaderData} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
+import axios from "axios";
 
 const Posts = () => {
 
-    const [posts, setPosts] = useState(useLoaderData().content);
+    const [posts, setPosts] = useState<Post[]>(useLoaderData().body.content);
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(!useLoaderData().last);
@@ -38,6 +39,8 @@ const Posts = () => {
         return () => observer.disconnect();
     });
 
+    console.log(posts);
+
     return (
         <div className="w-3/4 h-screen">
             <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
@@ -57,6 +60,11 @@ const Posts = () => {
 export default Posts;
 
 export async function loader() {
-    const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts');
-    return response.json();
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts');
+
+    console.log(response);
+    return {
+        status: response.status,
+        body: response.data,
+    };
 }

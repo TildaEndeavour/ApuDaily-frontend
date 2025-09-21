@@ -1,5 +1,5 @@
 export interface PostCreateRequestDto{
-    authorId?: number;
+    authorId?: number | null;
     thumbnailId?: number;
     title: string;
     description: string;

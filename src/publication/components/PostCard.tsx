@@ -5,7 +5,6 @@ const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 const PostCard: React.FC<{post: Post}> = ({post}) => {
 
-    console.log(post);
     return (
         <div className="p-4 w-104 h-120 border rounded-3xl shadow-2xl flex flex-col">
             <section className="w-full h-6/12 flex flex-row justify-center items-center">
@@ -17,7 +16,7 @@ const PostCard: React.FC<{post: Post}> = ({post}) => {
                     </div>
                 )}
             </section>
-            <p className="mt-3 mb-4 text-sm text-gray-800">{post.author ? post.author.username : "Anonym"}</p>
+            <p className="mt-3 mb-4 text-sm text-gray-800">{post.user ? post.user.username : "Anonym"}</p>
             <section className="gap-4 flex flex-col h-60">
                 <p className="text-lg font-semibold">{post.title}</p>
                 <p>{post.description}</p>

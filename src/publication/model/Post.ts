@@ -5,7 +5,7 @@ import type {Category} from "./Category.ts";
 
 export interface Post {
     id: number | null;
-    author?: User | null;
+    user?: User | null;
     thumbnail?: Thumbnail | null;
     title: string;
     description: string;
