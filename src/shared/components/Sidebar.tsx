@@ -10,7 +10,7 @@ import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 
 const Sidebar = () => {
     const [user, setUser] = useState<User>();
-    const { token, removeToken } = useAuth();
+    const { accessToken, removeTokens} = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoginCardOpen, setIsLoginCardOpen] = useState(false);
     const navigate = useNavigate();
@@ -22,25 +22,25 @@ const Sidebar = () => {
     }
 
     const handleLogout = () => {
-        removeToken();
+        removeTokens();
         setUser(undefined);
     };
 
     useEffect(() => {
-        if (!token) return;
+        if (!accessToken) return;
 
         (async () => {
             try {
-                const response = await getUserDetails();
+                const response = await getUserDetails(accessToken);
+
                 if (response.status === 200) {
                     setUser(response.body);
                 }
             } catch (error) {
-                console.error("Error in getUserDetails:", error);
-                localStorage.removeItem('token');
+                console.log(error);
             }
         })();
-    }, [token]);
+    }, [accessToken]);
 
     useEffect(() => {
         const observer = new ResizeObserver(([entry]) => {

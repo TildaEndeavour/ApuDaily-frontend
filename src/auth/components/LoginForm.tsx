@@ -15,7 +15,7 @@ const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
         password: ''
     })
     const [formValidator, setFormValidator] = useState<FormValidator>();
-    const { setToken } = useAuth();
+    const { setTokens } = useAuth();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -25,7 +25,7 @@ const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
 
         try {
             const response = await login(formData);
-            if (response.status === 200) setToken(response.body.token);
+            if (response.status === 200) setTokens(response.body.accessToken, response.body.refreshToken);
             onClose();
         } catch (error: unknown) {
             console.log(error);

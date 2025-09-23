@@ -1,46 +1,118 @@
-import axios from "axios";
-import React, {createContext, useCallback, useContext, useMemo, useState} from "react";
+import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 
 interface AuthContextType {
-    token: string | null;
-    setToken: (newToken: string) => void;
-    removeToken: () => void;
+    accessToken: string | null;
+    refreshToken: string | null;
+    setTokens: (access: string, refresh: string) => void;
+    removeTokens: () => void;
 }
+
+export const authAxios = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
+});
+
+export const unauthAxios = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
+});
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
 
-    const [token, setToken_] = useState(localStorage.getItem('token'));
+    useEffect(() => {
+        if (accessToken) {
+            authAxios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        } else {
+            delete authAxios.defaults.headers.common["Authorization"];
+        }
+    }, [accessToken]);
 
-    const initialToken = localStorage.getItem('token');
-    if (initialToken) axios.defaults.headers.common["Authorization"] = `Bearer ${initialToken}`;
-
-    const setToken = useCallback((newToken: string) => {
-        localStorage.setItem('token', newToken);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-        setToken_(newToken);
+    const setTokens = useCallback((access: string, refresh: string) => {
+        localStorage.setItem("accessToken", access);
+        localStorage.setItem("refreshToken", refresh);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${access}`;
+        setAccessToken(access);
+        setRefreshToken(refresh);
     }, []);
 
-    const removeToken = useCallback(() => {
-        localStorage.removeItem("token");
+    const removeTokens = useCallback(() => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         delete axios.defaults.headers.common["Authorization"];
-        setToken_(null);
+        setAccessToken(null);
+        setRefreshToken(null);
     }, []);
+
+    useEffect(() => {
+        const interceptor = axios.interceptors.response.use(
+            (response) => response,
+            async (error: AxiosError) => {
+                const originalRequest = error.config as AxiosRequestConfig & {
+                    _retry?: boolean;
+                    _retryCount?: number;
+                };
+
+                if (
+                    error.response?.status === 401 &&
+                    !originalRequest._retry &&
+                    (originalRequest._retryCount ?? 0) < 1 &&
+                    refreshToken
+                ) {
+                    originalRequest._retry = true;
+                    originalRequest._retryCount = (originalRequest._retryCount ?? 0) + 1;
+
+                    try {
+                        const res = await unauthAxios.post("/users/auth/refresh", { refreshToken });
+                        const newAccess = res.data?.token;
+                        if (!newAccess) {
+                            throw new Error("Не удалось получить новый access token");
+                        }
+
+                        setTokens(newAccess, refreshToken);
+
+                        originalRequest.headers = {
+                            ...originalRequest.headers,
+                            Authorization: `Bearer ${newAccess}`,
+                        };
+
+                        return authAxios(originalRequest);
+                    } catch (refreshError) {
+                        console.log(refreshError);
+                        removeTokens();
+                    }
+                }
+
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            authAxios.interceptors.response.eject(interceptor);
+        };
+    }, [accessToken, refreshToken, setTokens, removeTokens]);
 
     const contextValue = useMemo(
         () => ({
-            token,
-            setToken,
-            removeToken
+            accessToken,
+            refreshToken,
+            setTokens,
+            removeTokens,
         }),
-        [token, setToken, removeToken]
+        [accessToken, refreshToken, setTokens, removeTokens]
     );
 
-    return(
-      <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-    );
-}
+    return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+};
 
 export const useAuth = (): AuthContextType => {
     const context = useContext(AuthContext);

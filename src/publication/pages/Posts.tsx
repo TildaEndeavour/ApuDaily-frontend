@@ -2,6 +2,7 @@ import {useLoaderData} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
+import axios from "axios";
 
 const Posts = () => {
 
@@ -15,11 +16,13 @@ const Posts = () => {
     const loadMore = async () => {
         setIsLoading(true);
         const nextPage = page + 1;
-        const response = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts?pageNumber=' + nextPage);
-        const newPosts = await response.json();
-        setHasMore(!newPosts.last);
-        setPosts((prevPosts: Post[]) => [...prevPosts, ...newPosts.content]);
-        setPage(nextPage);
+        const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/posts?pageNumber=' + nextPage);
+        if(response.status === 200){
+            const newPosts = await response.data;
+            setHasMore(!newPosts.last);
+            setPosts((prevPosts: Post[]) => [...prevPosts, ...newPosts.content]);
+            setPage(nextPage);
+        }
         setIsLoading(false);
     }
 

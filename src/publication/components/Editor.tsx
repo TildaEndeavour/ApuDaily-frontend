@@ -5,6 +5,7 @@ import "quill/dist/quill.snow.css";
 import Thumbnail from "../model/Thumbnail.ts";
 import Counter from "./quill-modules/Counter.ts";
 import type {Post} from "../model/Post.ts";
+import axios from "axios";
 
 interface QuillEditorProps {
     value?: string;
@@ -61,14 +62,17 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
                                     const formData = new FormData();
                                     formData.append("file", file);
 
-                                    const res = await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+                                    const res = await axios.post(
+                                        import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+                                        formData,
                                         {
-                                            method: "POST",
-                                            body: formData
+                                            headers: {
+                                                'Content-Type': 'multipart/form-data'
+                                            }
                                         }
                                     );
 
-                                    const data: Thumbnail = await res.json();
+                                    const data: Thumbnail = await res.data;
 
                                     const quill = ref.current;
                                     if(!quill) return;

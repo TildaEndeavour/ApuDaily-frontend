@@ -2,6 +2,7 @@ import {ImageUp, Loader, RefreshCcw} from "lucide-react";
 import React, {useState} from "react";
 import type Thumbnail from "../model/Thumbnail.ts";
 import type {Post} from "../model/Post.ts";
+import axios from "axios";
 
 const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K extends keyof Post>(key: K, value: Post[K]) => void}> = ({thumbnail, setThumbnail}) => {
 
@@ -13,10 +14,13 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
         const formData = new FormData();
         formData.append("file",file);
 
-        return await fetch(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+        return await axios.post(
+            import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/upload',
+            formData,
             {
-                method: "POST",
-                body: formData
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             }
         );
     }
@@ -34,9 +38,9 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
             if(!file) return;
 
             const response = await uploadFile(file);
-            const data = await response.json();
+            const data = await response.data;
 
-            if(!response.ok){
+            if(!(response.status === 200)){
                 setError(data.error);
                 return;
             }
@@ -57,10 +61,10 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
         if(files.length == 0) return;
 
         const response = await uploadFile(files[0]);
-        const data = await response.json();
+        const data = await response.data;
         setIsLoading(false);
 
-        if(!response.ok){
+        if(!(response.status === 200)){
             setError(data.error);
             return;
         }

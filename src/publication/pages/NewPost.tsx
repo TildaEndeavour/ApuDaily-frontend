@@ -8,6 +8,7 @@ import {uploadPost} from "../services/requests.ts";
 import {useNavigate} from "react-router-dom";
 import {getUserDetails} from "../../auth/services/auth.ts";
 import type User from "../../auth/model/User.ts";
+import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 
 const NewPost = () => {
 
@@ -28,6 +29,7 @@ const NewPost = () => {
         messages: {}
     });
     const navigate = useNavigate();
+    const {accessToken} = useAuth();
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,13 +42,15 @@ const NewPost = () => {
 
         let author: User | null = null;
 
-        try {
-            const authorResponse = await getUserDetails();
-            if (authorResponse.status === 200) {
-                author = authorResponse.body;
+        if(accessToken){
+            try {
+                const authorResponse = await getUserDetails(accessToken);
+                if (authorResponse.status === 200) {
+                    author = authorResponse.body;
+                }
+            } catch (e) {
+                console.error('User loading error', e);
             }
-        } catch (e) {
-            console.error('User loading error', e);
         }
 
         const request: PostCreateRequestDto = {
