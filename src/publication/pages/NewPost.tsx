@@ -4,7 +4,7 @@ import type {Post} from "../model/Post.ts";
 import {validatePostForm} from "../services/validation.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
-import {uploadPost} from "../services/requests.ts";
+import {uploadPost, uploadTagsToServer} from "../services/requests.ts";
 import {useNavigate} from "react-router-dom";
 import {getUserDetails} from "../../auth/services/auth.ts";
 import type User from "../../auth/model/User.ts";
@@ -53,6 +53,15 @@ const NewPost = () => {
             }
         }
 
+        let postTagsId: number[] = [];
+
+        if (post.tags) {
+            const uploadTagsResponse = await uploadTagsToServer(post.tags);
+            if (uploadTagsResponse) {
+                postTagsId = uploadTagsResponse.map(tag => tag.id);
+            }
+        }
+
         const request: PostCreateRequestDto = {
             authorId: author ? author.id : null,
             thumbnailId: post.thumbnail?.id,
@@ -60,8 +69,10 @@ const NewPost = () => {
             description: post.description,
             content: post.content,
             categoryId: post.category!.id,
-            tagsId: post.tags!.flatMap(tag => tag.id !== null ? [tag.id] : [])
+            tagsId: postTagsId
         }
+
+        console.log(request);
 
         const response = await uploadPost(request);
         if(response.status === 200) navigate('/posts');

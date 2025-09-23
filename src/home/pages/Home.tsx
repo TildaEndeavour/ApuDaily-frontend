@@ -10,7 +10,8 @@ const HomePage = () => {
             <section className="font-semibold text-8xl lg:flex flex-col hidden mb-16">
                 <span>Hey, fren.</span>
                 <span>Write something!</span>
-                <span className="italic font-light ml-32">or just explore...</span>
+                <span className="animate-fade-right animate-once animate-duration-1000 animate-delay-500 animate-ease-in-out animate-alternate animate-fill-both
+                                italic font-light ml-32">or just explore...</span>
             </section>
 
             <ModeButton/>

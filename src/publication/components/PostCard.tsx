@@ -3,10 +3,14 @@ import type {Post} from "../model/Post.ts";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
-const PostCard: React.FC<{post: Post}> = ({post}) => {
+const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post}) => {
 
     return (
-        <div className="p-4 w-104 h-120 border rounded-3xl shadow-2xl flex flex-col">
+        <div onClick={onSelect}
+            className="p-4 w-104 h-120 border rounded-3xl shadow-2xl
+             flex flex-col cursor-pointer
+             animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both"
+            >
             <section className="w-full h-6/12 flex flex-row justify-center items-center">
                 {post.thumbnail ? (
                     <img className="rounded-2xl w-full h-full object-cover" src={BASE_URL + post.thumbnail.url} alt="thumbnail"/>

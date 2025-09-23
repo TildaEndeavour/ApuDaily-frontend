@@ -5,7 +5,8 @@ import Posts from "./publication/pages/Posts.tsx";
 import NewPost from "./publication/pages/NewPost.tsx";
 import ErrorPage from "./shared/pages/ErrorPage.tsx";
 import AuthProvider from "./auth/providers/AuthProvider.tsx";
-import {postLoader} from "./publication/services/loaders.ts";
+import {postDetailsLoader, postsLoader} from "./publication/services/loaders.ts";
+import PostDetails from "./publication/pages/PostDetails.tsx";
 
 function App() {
 
@@ -17,13 +18,19 @@ function App() {
             {
                 path: "/posts",
                 element: <Posts/>,
-                loader: postLoader,
+                loader: postsLoader,
                 errorElement: <ErrorPage/>
             },
             {
                 path: "/posts/new",
                 element: <NewPost/>,
                 errorElement: <ErrorPage/>,
+            },
+            {
+                path: "/posts/:id",
+                element: <PostDetails />,
+                loader: postDetailsLoader,
+                errorElement: <ErrorPage/>
             }
         ]},
   ]);

@@ -25,7 +25,10 @@ const UserBadge: React.FC<{
                 {!isCollapsed ? data?.username ?? "Anonym" : "…"}
             </p>
             {data
-                ? <button className="p-2 rounded-3xl hover:bg-gray-200" onClick={onLogOut}><LogOut size={24} strokeWidth={1} style={{ transform: "scaleX(-1)" }}/></button>
+                ? <>
+                    <button className="p-2 rounded-3xl hover:bg-gray-200" onClick={onLogOut}><LogOut size={24} strokeWidth={1} style={{ transform: "scaleX(-1)" }}/></button>
+                    <p>Log out</p>
+                  </>
                 : <>
                     <button className="p-2 rounded-3xl hover:bg-green-200" onClick={onLogin}><LogIn size={24} strokeWidth={1}/></button>
                     <p>Sign in</p>

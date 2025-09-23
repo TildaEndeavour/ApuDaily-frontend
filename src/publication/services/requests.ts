@@ -2,7 +2,7 @@ import type Tag from "../model/Tag.ts";
 import axios from "axios";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 
-export const loadTagsToServer = async (tags: Tag[]) => {
+export const uploadTagsToServer = async (tags: Tag[]) => {
     try {
         const response = await axios.post(
             `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/tags`,

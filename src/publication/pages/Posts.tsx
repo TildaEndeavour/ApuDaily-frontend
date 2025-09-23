@@ -1,4 +1,4 @@
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useNavigate} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
@@ -10,6 +10,7 @@ const Posts = () => {
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(!useLoaderData().last);
+    const navigate = useNavigate();
 
     const loadingRef = useRef(null);
 
@@ -24,6 +25,10 @@ const Posts = () => {
             setPage(nextPage);
         }
         setIsLoading(false);
+    }
+
+    const handleSelectPost = (postId: number) => {
+        navigate(`/posts/${postId}`);
     }
 
     useEffect(() => {
@@ -45,7 +50,7 @@ const Posts = () => {
         <div className="w-3/4 h-screen">
             <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
                 {posts.map((post: Post) => {
-                    return <PostCard key={post.id} post={post}/>
+                    return <PostCard onSelect={() => handleSelectPost(post.id)} key={post.id} post={post}/>
                 })}
             </div>
             {hasMore && (
