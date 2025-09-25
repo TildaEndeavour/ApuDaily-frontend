@@ -2,6 +2,7 @@ import type Tag from "../model/Tag.ts";
 import axios from "axios";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
+import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 
 export const uploadTagsToServer = async (tags: Tag[]) => {
     try {
@@ -21,11 +22,11 @@ export const uploadTagsToServer = async (tags: Tag[]) => {
     }
 };
 
-export const uploadPost = async(post: PostCreateRequestDto) => {
+export const uploadPost = async(requestDto: PostCreateRequestDto) => {
     try {
         const response = await axios.post(
             `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts`,
-            post,
+            requestDto,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -42,11 +43,11 @@ export const uploadPost = async(post: PostCreateRequestDto) => {
     }
 }
 
-export const updatePost= async(post: PostUpdateRequestDto) => {
+export const updatePost= async(requestDto: PostUpdateRequestDto) => {
     try {
         const response = await axios.patch(
-            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts/${post.postId}`,
-            post,
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts/${requestDto.postId}`,
+            requestDto,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -62,3 +63,24 @@ export const updatePost= async(post: PostUpdateRequestDto) => {
         throw new Error("Post upload error");
     }
 }
+
+export const deletePost = async (requestDto: PostDeleteRequestDto) => {
+    try {
+        const response = await axios.delete(
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts/${requestDto.postId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: requestDto
+            }
+        );
+
+        return {
+            status: response.status,
+            body: response.data
+        };
+    } catch (error: unknown) {
+        throw new Error("Post deletion error");
+    }
+};
