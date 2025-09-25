@@ -5,11 +5,11 @@ import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, useEffect, useRef, useState} from "react";
 import type Quill from "quill";
 import ModalCard from "../../shared/components/ModalCard.tsx";
-import DOMPurify from "dompurify";
 import {isTag} from "../services/validation.ts";
 import {type Category, loader as loadAvailableCategories} from "../model/Category.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {Post} from "../model/Post.ts";
+import PostDetails from "../pages/PostDetails.tsx";
 
 const PostForm: React.FC<{
     post: Post,
@@ -71,7 +71,7 @@ const PostForm: React.FC<{
 
 
     return (
-        <form className="w-3/4 flex flex-col gap-4 mt-12" onSubmit={(event) => onSubmitPost(event)}>
+        <form className="w-2/3 h-fit p-8 flex flex-col gap-4 mt-1 animate-fade-down bg-white rounded-2xl border-1" onSubmit={(event) => onSubmitPost(event)}>
             <div className="flex gap-4">
                 <ThumbnailLoader
                     thumbnail={post.thumbnail ? post.thumbnail : null}
@@ -82,6 +82,7 @@ const PostForm: React.FC<{
                         <label htmlFor="title" className="my-auto">Title: </label>
                         <input
                             id="title"
+                            value={post.title}
                             name="title" placeholder="Enter title..."
                             className="h-12 p-4 ml-4 flex-grow rounded-3xl"
                             onChange={(e) => updatePostField("title", e.target.value)}
@@ -93,6 +94,7 @@ const PostForm: React.FC<{
                         <textarea
                             id="description"
                             name="description"
+                            value={post.description}
                             placeholder="Enter description"
                             className="h-24 max-h-31 p-4 w-full"
                             onChange={(e) => updatePostField("description", e.target.value)}
@@ -106,9 +108,7 @@ const PostForm: React.FC<{
                             onClick={() => setIsPreviewOpen(true)}
                     >Preview</button>
                     <ModalCard isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-                        <div className="h-fit w-220"
-                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}>
-                        </div>
+                        <PostDetails postPreview={post}/>
                     </ModalCard>
                     <p className="flex flex-row gap-4 justify-center">
                         <button type="button" className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">

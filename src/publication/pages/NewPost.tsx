@@ -79,7 +79,7 @@ const NewPost = () => {
     }
     
     return (
-        <div className="w-screen h-screen flex flex-col items-center gap-4">
+        <div className="w-screen h-screen pt-16 flex flex-col items-center gap-4">
             <PostForm
                 post={post}
                 errors={errors}

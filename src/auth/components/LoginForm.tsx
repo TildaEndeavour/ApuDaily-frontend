@@ -43,7 +43,7 @@ const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
     return (
         <>
             <form onSubmit={(event) => handleSubmit(event)}
-                  className="w-80 h-fit mt-6 flex flex-col items-center gap-4">
+                  className="p-8 w-80 h-fit flex flex-col items-center gap-4 bg-white rounded-2xl border-1">
                 <h1 className="text-lg font-bold">Log-in</h1>
                 <input
                     id="usernameOrEmail"

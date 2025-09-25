@@ -28,7 +28,7 @@ function App() {
             },
             {
                 path: "/posts/:id",
-                element: <PostDetails />,
+                element: <PostDetails postPreview={null}/>,
                 loader: postDetailsLoader,
                 errorElement: <ErrorPage/>
             }

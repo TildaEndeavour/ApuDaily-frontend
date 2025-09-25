@@ -1,6 +1,7 @@
 import type Tag from "../model/Tag.ts";
 import axios from "axios";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
+import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 
 export const uploadTagsToServer = async (tags: Tag[]) => {
     try {
@@ -24,6 +25,27 @@ export const uploadPost = async(post: PostCreateRequestDto) => {
     try {
         const response = await axios.post(
             `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts`,
+            post,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        return {
+            status: response.status,
+            body: response.data
+        };
+    } catch (error: unknown) {
+        throw new Error("Post upload error");
+    }
+}
+
+export const updatePost= async(post: PostUpdateRequestDto) => {
+    try {
+        const response = await axios.patch(
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts/${post.postId}`,
             post,
             {
                 headers: {

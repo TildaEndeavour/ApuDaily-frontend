@@ -12,9 +12,9 @@ const ModalCard: React.FC<PostPreviewProps> = ({isOpen, onClose, children}) => {
     if (!isOpen) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ql-editor">
+        <div className="fixed inset-0 z-50 flex  justify-center backdrop-blur-sm ql-editor h-screen">
             <div className="flex flex-row">
-                <div className="bg-white rounded-4xl shadow-lg p-6 max-h-200 overflow-y-auto w-fit h-fit">
+                <div className="flex justify-center overflow-y-auto w-fit h-full">
                     {children}
                 </div>
                 <div className="flex items-start">

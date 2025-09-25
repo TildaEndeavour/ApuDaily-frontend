@@ -41,7 +41,7 @@ const SignUpForm = () => {
     return (
         (formValidator && formValidator.isValid) ? done :
             <form onSubmit={(event) => handleSubmit(event)}
-                  className="w-90 h-fit mt-6 flex flex-col items-center gap-4">
+                  className="w-90 p-8 h-fit mt-6 flex flex-col items-center gap-4 rounded-2xl bg-white border-1">
                 <h1 className="text-lg font-bold">Sign-up</h1>
                 <input
                     id="username"

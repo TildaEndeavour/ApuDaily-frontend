@@ -3,13 +3,13 @@ import type {Post} from "../model/Post.ts";
 import type {Category} from "../model/Category.ts";
 
 export function isTag(value: string){
-    const hashtagRegex = /^#[A-Za-zА-Яа-я0-9_]{2,140}$/;
+    const hashtagRegex = /^[A-Za-zА-Яа-я0-9_]{2,140}$/;
     return hashtagRegex.test(value);
 }
 
 export function isPostTitle(value: string){
     let message = '';
-    const titleRegex = /^(?=.{10,100}$)[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9\s.,!?-]*$/;
+    const titleRegex = /^(?=.{10,100}$)[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9\s.,!?():;"'-]*$/;
     if(!titleRegex.test(value)) message = 'The title contains prohibited characters.';
     if(value.length < 10) message = 'The title is too small';
     return message;
