@@ -1,15 +1,12 @@
 import {type ChangeEventHandler, type FormEvent, useState} from "react";
-import ModalCard from "../../shared/components/ModalCard.tsx";
-import SignUpForm from "./SignUpForm.tsx";
 import {useAuth} from "../providers/AuthProvider.tsx";
 import {validateLoginForm} from "../services/validation.ts";
 import {login} from "../services/auth.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {LoginInputs} from "../model/AuthFormInputs.ts";
 
-const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
+const LoginForm: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
 
-    const [isSignUpOpen, setIsSignUpOpen] = useState<boolean>(false);
     const [formData, setFormData] = useState<LoginInputs>({
         usernameOrEmail: '',
         password: ''
@@ -72,14 +69,11 @@ const LoginForm: React.FC<{onClose: () => void}> = ({onClose}) => {
                 <button
                     type="button"
                     className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
-                    onClick={() => setIsSignUpOpen(true)}
+                    onClick={() => onSwitchToSignUp()}
                 >
                     Sign-up
                 </button>
             </form>
-            <ModalCard isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
-                <SignUpForm/>
-            </ModalCard>
         </>
     );
 }

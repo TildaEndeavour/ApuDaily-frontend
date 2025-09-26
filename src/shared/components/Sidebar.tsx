@@ -7,6 +7,7 @@ import LoginForm from "../../auth/components/LoginForm.tsx";
 import type User from "../../auth/model/User.ts";
 import {getUserDetails} from "../../auth/services/auth.ts";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
+import AuthModal from "../../auth/components/AuthModal.tsx";
 
 const Sidebar = () => {
     const [user, setUser] = useState<User>();
@@ -76,9 +77,7 @@ const Sidebar = () => {
                 data={user}
                 isCollapsed={width < 200}
             />
-            <ModalCard isOpen={isLoginCardOpen} onClose={() => setIsLoginCardOpen(false)}>
-                <LoginForm onClose={() => setIsLoginCardOpen(false)}/>
-            </ModalCard>
+            {isLoginCardOpen && <AuthModal onClose={() => setIsLoginCardOpen(false)} />}
         </aside>
     );
 }

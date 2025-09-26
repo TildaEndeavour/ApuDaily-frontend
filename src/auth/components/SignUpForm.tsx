@@ -3,8 +3,9 @@ import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import {signUp} from "../services/auth.ts";
 import type {SignUpInputs} from "../model/AuthFormInputs.ts";
 import {validateSignUpForm} from "../services/validation.ts";
+import axios from "axios";
 
-const SignUpForm = () => {
+const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin }) => {
     const [formData, setFormData] = useState<SignUpInputs>({
         username: '',
         email: '',
@@ -12,6 +13,7 @@ const SignUpForm = () => {
         confirmPassword: ''
     })
     const [formValidator, setFormValidator] = useState<FormValidator>();
+    const [result, setResult] = useState("");
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -19,9 +21,14 @@ const SignUpForm = () => {
         if (formValidator && !formValidator.isValid) return;
 
         try {
-           await signUp(formData);
+            await signUp(formData);
+            setResult("User created!");
         } catch (error: unknown) {
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                setResult(error.response?.data.message)
+            } else {
+                setResult('Unknown error:' + error);
+            }
         }
     }
 
@@ -33,15 +40,10 @@ const SignUpForm = () => {
         });
     };
 
-    const done = (
-        <div className="w-90 flex justify-center">
-            <p>User created!</p>
-        </div>);
-
     return (
-        (formValidator && formValidator.isValid) ? done :
             <form onSubmit={(event) => handleSubmit(event)}
-                  className="w-90 p-8 h-fit mt-6 flex flex-col items-center gap-4 rounded-2xl bg-white border-1">
+                  className="w-90 p-8 h-fit flex flex-col items-center gap-4 rounded-2xl bg-white border-1"
+            >
                 <h1 className="text-lg font-bold">Sign-up</h1>
                 <input
                     id="username"
@@ -79,8 +81,16 @@ const SignUpForm = () => {
                 />
                 {(!formValidator?.isValid && formValidator?.messages.confirmPassword) &&
                     <div className="text-xs text-red-900">{formValidator.messages.confirmPassword}</div>}
+                {(formValidator && formValidator.isValid) ? <div className="w-90 p-1 flex justify-center border-1 bg-red-200">{result}</div> : ""}
                 <button className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100">
                     Register
+                </button>
+                <button
+                    type="button"
+                    className="border-1 h-fit p-4 ml-4 rounded-3xl hover:bg-gray-100"
+                    onClick={onSwitchToLogin}
+                >
+                    Back to Login
                 </button>
             </form>
     );

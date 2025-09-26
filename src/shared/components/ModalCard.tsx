@@ -1,5 +1,4 @@
-import React from "react";
-import {X} from "lucide-react";
+import React, {useEffect, useRef} from "react";
 import { createPortal } from "react-dom";
 
 interface PostPreviewProps{
@@ -9,22 +8,28 @@ interface PostPreviewProps{
 }
 
 const ModalCard: React.FC<PostPreviewProps> = ({isOpen, onClose, children}) => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (wrapperRef.current && event.target instanceof Node && !wrapperRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [onClose]);
+
     if (!isOpen) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-50 flex  justify-center backdrop-blur-sm ql-editor h-screen">
-            <div className="flex flex-row">
-                <div className="flex justify-center overflow-y-auto w-fit h-full">
-                    {children}
-                </div>
-                <div className="flex items-start">
-                    <button
-                        onClick={onClose}
-                        className="ml-4 p-3 bg-gray-100 rounded-full flex justify-end text-gray-500 hover:text-gray-700 focus:outline-none"
-                    >
-                        <X size={32} color="red"/>
-                    </button>
-                </div>
+        <div className="fixed inset-0 z-50 flex flex-row justify-center backdrop-blur-sm ql-editor h-screen w-screen animate-fade-down">
+            <div ref={wrapperRef} className="p-1 my-auto flex justify-center overflow-y-auto h-fit w-max-2/3">
+                {children}
             </div>
         </div>,
         document.body

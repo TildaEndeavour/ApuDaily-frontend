@@ -91,7 +91,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     }, [] );
 
     return(
-        <div className="w-2/3 h-200 flex flex-row gap-2">
+        <div className="w-300 flex flex-row gap-2">
             <div>
                 <article className="px-16 py-12 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
                             bg-gray-100 rounded-3xl shadow-2xl">
