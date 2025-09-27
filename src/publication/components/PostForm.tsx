@@ -69,11 +69,9 @@ const PostForm: React.FC<{
         };
     }, []);
 
-    console.log(post);
-
     return (
-        <form className="w-2/3 h-fit p-8 flex flex-col gap-4 mt-1 animate-fade-down bg-white rounded-2xl border-1" onSubmit={(event) => onSubmitPost(event)}>
-            <div className="flex gap-4">
+        <form className="w-380 p-8 flex flex-col gap-4 animate-fade-down bg-white rounded-2xl border-1" onSubmit={(event) => onSubmitPost(event)}>
+            <div className="flex gap-4 mt-1">
                 <ThumbnailLoader
                     thumbnail={post.thumbnail ? post.thumbnail : null}
                     setThumbnail={updatePostField}
@@ -109,7 +107,9 @@ const PostForm: React.FC<{
                             onClick={() => setIsPreviewOpen(true)}
                     >Preview</button> }
                     <ModalCard isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-                        <PostDetails postPreview={post}/>
+                        <div className="h-240 my-auto overflow-y-auto">
+                            <PostDetails postPreview={post}/>
+                        </div>
                     </ModalCard>
                 </section>
             </div>

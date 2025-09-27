@@ -8,13 +8,11 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     return (
         <ModalCard isOpen={true} onClose={onClose}>
-            <div className="flex items-center">
-                {isSignUp ? (
-                    <SignUpForm onSwitchToLogin={() => setIsSignUp(false)} />
-                ) : (
-                    <LoginForm onSwitchToSignUp={() => setIsSignUp(true)} onClose={onClose} />
-                )}
-            </div>
+            {isSignUp ? (
+                <SignUpForm onSwitchToLogin={() => setIsSignUp(false)} />
+            ) : (
+                <LoginForm onSwitchToSignUp={() => setIsSignUp(true)} onClose={onClose} />
+            )}
         </ModalCard>
     );
 };

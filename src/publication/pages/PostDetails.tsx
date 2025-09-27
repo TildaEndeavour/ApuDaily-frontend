@@ -88,8 +88,8 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     }, [] );
 
     return(
-        <div className="w-300 flex flex-row gap-2">
-            <div>
+        <div className="mx-auto w-360 flex flex-row gap-2">
+            <div className="mt-10">
                 <article className="px-16 py-12 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
                             bg-gray-100 rounded-3xl shadow-2xl">
 
@@ -119,7 +119,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                 </section>
             </div>
             {user && user.id === content.user?.id && (
-                <section className="flex flex-col gap-2">
+                <section className="flex flex-col gap-2 mt-10">
                     <EditPostInvite onSelect={() => setIsEdit(true)}/>
                     <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 rounded-2xl animate-fade-left"
                          onClick={() => handleDeletePost()}
@@ -129,13 +129,13 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                 </section>
             )}
             <ModalCard isOpen={isEdit} onClose={() => setIsEdit(false)}>
-                    <PostForm
-                        post={content}
-                        errors={errors}
-                        onChangePost={setContent}
-                        onSubmitPost={handleUpdatePost}
-                        isNeedPreview={false}
-                    />
+                <PostForm
+                    post={content}
+                    errors={errors}
+                    onChangePost={setContent}
+                    onSubmitPost={handleUpdatePost}
+                    isNeedPreview={false}
+                />
             </ModalCard>
         </div>
     );

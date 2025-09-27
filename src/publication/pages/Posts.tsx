@@ -47,7 +47,7 @@ const Posts = () => {
     });
 
     return (
-        <div className="w-3/4 h-screen">
+        <div className="ml-64">
             <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
                 {posts.map((post: Post) => {
                     return <PostCard onSelect={() => handleSelectPost(post.id)} key={post.id} post={post}/>

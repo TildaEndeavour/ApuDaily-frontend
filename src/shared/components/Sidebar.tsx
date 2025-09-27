@@ -53,7 +53,7 @@ const Sidebar = () => {
     }, []);
 
     return (
-        <aside ref={ref} className={"fixed group h-screen items-center flex flex-col bg-white shadow-xl/60 transition-all duration-500 pt-8 justify-between" + (isCollapsed ? " w-64" : " w-20 hover:w-64")}>
+        <aside ref={ref} className={"fixed z-50 group h-screen items-center flex flex-col bg-white shadow-xl/60 transition-all duration-500 pt-8 justify-between" + (isCollapsed ? " w-64" : " w-20 hover:w-64")}>
             <section className="flex flex-col">
                 <button className="p-4 w-fit h-fit rounded-full hover:bg-stone-100" onClick={handleCollapse}>
                     <Menu strokeWidth={1} size={48}/>

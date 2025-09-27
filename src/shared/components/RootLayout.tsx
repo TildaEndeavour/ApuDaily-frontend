@@ -5,9 +5,7 @@ const RootLayout = () => {
     return (
         <div>
             <Sidebar/>
-            <div className="flex justify-center h-screen">
-                <Outlet/>
-            </div>
+            <Outlet/>
         </div>
     );
 }
