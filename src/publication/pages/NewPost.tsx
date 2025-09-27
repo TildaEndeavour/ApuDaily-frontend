@@ -85,6 +85,7 @@ const NewPost = () => {
                 errors={errors}
                 onChangePost={setPost}
                 onSubmitPost={handleSubmit}
+                isNeedPreview={true}
             />
         </div>
     );

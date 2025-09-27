@@ -15,8 +15,9 @@ const PostForm: React.FC<{
     post: Post,
     errors: FormValidator,
     onChangePost: React.Dispatch<React.SetStateAction<Post>>,
-    onSubmitPost: (event: FormEvent<HTMLFormElement>) => void
-    }> = ({post, errors, onChangePost, onSubmitPost}) => {
+    onSubmitPost: (event: FormEvent<HTMLFormElement>) => void,
+    isNeedPreview: boolean
+    }> = ({post, errors, onChangePost, onSubmitPost, isNeedPreview}) => {
 
     const [loading, setLoading] = useState(true);
     const [availableCategories, setAvailableCategories] = useState<Category[] | null>(null);
@@ -103,25 +104,13 @@ const PostForm: React.FC<{
                 </section>
                 <section className="flex flex-col gap-4">
                     <button type="submit" className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Publish</button>
-                    <button type="button"
+                    { isNeedPreview && <button type="button"
                             className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30"
                             onClick={() => setIsPreviewOpen(true)}
-                    >Preview</button>
+                    >Preview</button> }
                     <ModalCard isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
                         <PostDetails postPreview={post}/>
                     </ModalCard>
-                    <p className="flex flex-row gap-4 justify-center">
-                        <button type="button" className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-yellow-200 shadow-2xl/30">
-                            <Save
-                                size={36}
-                            />
-                        </button>
-                        <button type="button" className="rounded-3xl border-gray-100 w-fit h-16 p-4 hover:bg-red-300 shadow-2xl/30">
-                            <Trash
-                                size={36}
-                            />
-                        </button>
-                    </p>
                 </section>
             </div>
             <section className="flex flex-row w-full border-b-1">

@@ -68,11 +68,8 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
             tagsId: postTagsId
         }
 
-        console.log(request);
-
-        console.log("Пытаюсь обновить публикацию");
-         await updatePost(request);
-         console.log("Публикация обновлена");
+        await updatePost(request);
+        setIsEdit(false);
     }
 
     useEffect(() => {
@@ -137,6 +134,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                         errors={errors}
                         onChangePost={setContent}
                         onSubmitPost={handleUpdatePost}
+                        isNeedPreview={false}
                     />
             </ModalCard>
         </div>
