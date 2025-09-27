@@ -1,5 +1,4 @@
 import ThumbnailLoader from "./ThumbnailLoader.tsx";
-import {Save, Trash} from "lucide-react";
 import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, useEffect, useRef, useState} from "react";
@@ -70,6 +69,7 @@ const PostForm: React.FC<{
         };
     }, []);
 
+    console.log(post);
 
     return (
         <form className="w-2/3 h-fit p-8 flex flex-col gap-4 mt-1 animate-fade-down bg-white rounded-2xl border-1" onSubmit={(event) => onSubmitPost(event)}>
@@ -128,7 +128,7 @@ const PostForm: React.FC<{
                         }
                         defaultValue=""
                     >
-                        <option value="" disabled hidden>Select category</option>
+                        <option value="" disabled hidden>{post.category ? post.category.name : "Select category"}</option>
                         {loading
                             ? <option disabled>Loading...</option>
                             : availableCategories?.map((category: Category) => (
@@ -152,7 +152,7 @@ const PostForm: React.FC<{
                                    tagRef.current.value = "";
                                }
                            }}
-                           className="h-12 p-4 ml-4 rounded-3xl"
+                           className="h-12 p-4 ml-4 rounded-3xl my-auto"
                     />
                 </p>
             </section>
