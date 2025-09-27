@@ -32,11 +32,11 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
         input.setAttribute("accept","image/*");
         input.click();
 
-        setIsLoading(true);
         input.onchange = async () => {
             const file = input.files?.[0];
             if(!file) return;
 
+            setIsLoading(true);
             const response = await uploadFile(file);
             const data = await response.data;
 
@@ -47,8 +47,8 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
 
             setThumbnail("thumbnail", data);
             setError(null);
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }
 
     const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
