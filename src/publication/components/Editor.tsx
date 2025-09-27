@@ -117,8 +117,8 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange, ref}) => {
     }, [value]);
 
     return (
-        <div className="h-96 w-full border-1">
-            <div ref={editorRef} className="h-max-80 overflow-y-auto border border-gray-300 rounded-b-md"/>
+        <div className="h-96 pb-12 w-full">
+            <div ref={editorRef} className="h-full overflow-y-auto rounded-b-md"/>
             <div id="counter"/>
         </div>
     );
