@@ -1,4 +1,4 @@
-import {ImageUp, Loader, RefreshCcw} from "lucide-react";
+import {ImageUp, Loader, Trash} from "lucide-react";
 import React, {useState} from "react";
 import type Thumbnail from "../model/Thumbnail.ts";
 import type {Post} from "../model/Post.ts";
@@ -102,10 +102,10 @@ const ThumbnailLoader: React.FC<{thumbnail: Thumbnail | null, setThumbnail: <K e
                          alt="Thumbnail"
                          src={import.meta.env.VITE_BASE_URL + thumbnail.url}
                     />
-                    <p className="absolute inset-0 hover:animate-spin flex items-center justify-center"
-                       onClick={loadHandler}
+                    <p className="absolute inset-0 hover:animate-wiggle-more flex items-center justify-center"
+                       onClick={() => setThumbnail("thumbnail", null)}
                     >
-                        <RefreshCcw className="scale-x-[-1]" strokeWidth={1} size={48}/>
+                        <Trash color="red" strokeWidth={1} size={56}/>
                     </p>
                 </>
                 )
