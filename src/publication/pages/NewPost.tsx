@@ -9,6 +9,9 @@ import {useNavigate} from "react-router-dom";
 import {getUserDetails} from "../../auth/services/auth.ts";
 import type User from "../../auth/model/User.ts";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
+import ModalContainer from "../../shared/components/ModalContainer.tsx";
+import PostDetails from "./PostDetails.tsx";
+import type Tag from "../model/Tag.ts";
 
 const NewPost = () => {
 
@@ -24,6 +27,7 @@ const NewPost = () => {
         createdAt: null,
         updatedAt: null
     });
+    const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
     const [errors, setErrors] = useState<FormValidator>({
         isValid: false,
         messages: {}
@@ -58,7 +62,7 @@ const NewPost = () => {
         if (post.tags) {
             const uploadTagsResponse = await uploadTagsToServer(post.tags);
             if (uploadTagsResponse) {
-                postTagsId = uploadTagsResponse.map(tag => tag.id);
+                postTagsId = uploadTagsResponse.map((tag: Tag) => tag.id);
             }
         }
 
@@ -77,16 +81,27 @@ const NewPost = () => {
         const response = await uploadPost(request);
         if(response.status === 200) navigate('/posts');
     }
+
+    const handlePreview = () => {
+        const postFormValidator = validatePostForm(post);
+        setErrors(postFormValidator);
+        if(postFormValidator.isValid) setIsPreviewOpen(true)
+    }
     
     return (
-        <div className="w-screen h-screen pt-16 flex flex-col items-center gap-4">
+        <div className="w-screen h-screen pt-16 flex flex-col items-center">
             <PostForm
                 post={post}
                 errors={errors}
                 onChangePost={setPost}
                 onSubmitPost={handleSubmit}
-                isNeedPreview={true}
+                onPreview={handlePreview}
             />
+            <ModalContainer isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
+                <div className="h-240 my-auto overflow-y-auto">
+                    <PostDetails postPreview={post}/>
+                </div>
+            </ModalContainer>
         </div>
     );
 }

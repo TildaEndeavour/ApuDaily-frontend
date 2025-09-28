@@ -1,26 +1,17 @@
 import ThumbnailLoader from "./ThumbnailLoader.tsx";
 import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
-import React, {type FormEvent, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import type Quill from "quill";
-import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import {isTag} from "../services/validation.ts";
 import {type Category, loader as loadAvailableCategories} from "../model/Category.ts";
-import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {Post} from "../model/Post.ts";
-import PostDetails from "../pages/PostDetails.tsx";
+import type {PostFormProps} from "../../shared/model/PostFormProps.ts";
 
-const PostForm: React.FC<{
-    post: Post,
-    errors: FormValidator,
-    onChangePost: React.Dispatch<React.SetStateAction<Post>>,
-    onSubmitPost: (event: FormEvent<HTMLFormElement>) => void,
-    isNeedPreview: boolean
-    }> = ({post, errors, onChangePost, onSubmitPost, isNeedPreview}) => {
+const PostForm: React.FC<PostFormProps> = ({post, errors, onChangePost, onSubmitPost, onPreview}) => {
 
     const [loading, setLoading] = useState(true);
     const [availableCategories, setAvailableCategories] = useState<Category[] | null>(null);
-    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const editorRef = useRef<Quill>(null);
     const tagRef = useRef<HTMLInputElement>(null);
@@ -102,15 +93,10 @@ const PostForm: React.FC<{
                 </section>
                 <section className="flex flex-col gap-4">
                     <button type="submit" className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30">Publish</button>
-                    { isNeedPreview && <button type="button"
+                    { onPreview && <button type="button"
                             className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30"
-                            onClick={() => setIsPreviewOpen(true)}
+                            onClick={() => onPreview()}
                     >Preview</button> }
-                    <ModalContainer isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-                        <div className="h-240 my-auto overflow-y-auto">
-                            <PostDetails postPreview={post}/>
-                        </div>
-                    </ModalContainer>
                 </section>
             </div>
             <section className="flex flex-row w-full border-b-1">

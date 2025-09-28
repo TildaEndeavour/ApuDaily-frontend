@@ -2,20 +2,19 @@ import type {Post} from "../model/Post.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import DOMPurify from "dompurify";
 import {Pencil, Tag, Trash} from "lucide-react";
-import {type FormEvent, useEffect, useState} from "react";
+import type {default as TagModel} from "../model/Tag.ts";
+import React, {type FormEvent, useEffect, useState} from "react";
 import {getUserDetails} from "../../auth/services/auth.ts";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
-import type User from "../../auth/model/User.ts";
-import EditPostInvite from "../components/EditPostInvite.tsx";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostForm from "../components/PostForm.tsx";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import {validatePostForm} from "../services/validation.ts";
-import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import {deletePost, updatePost, uploadTagsToServer} from "../services/requests.ts";
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
+import type {User} from "../../auth/model/User.ts";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -46,16 +45,15 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
         const postFormValidator = validatePostForm(content);
         setErrors(postFormValidator);
-        if(!postFormValidator.isValid){
-            return;
-        }
+        if(!postFormValidator.isValid) return;
+
 
         let postTagsId: number[] = [];
 
         if (content.tags) {
             const uploadTagsResponse = await uploadTagsToServer(content.tags);
             if (uploadTagsResponse) {
-                postTagsId = uploadTagsResponse.map(tag => tag.id);
+                postTagsId = uploadTagsResponse.map((tag: TagModel) => tag.id);
             }
         }
 
@@ -98,7 +96,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     <section className="flex flex-row justify-between mb-8">
                         <h4 className="font-bold">{content.category?.name}</h4>
                         <span>
-                {new Date(content.createdAt).toLocaleString('en-US', {
+                {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -122,8 +120,12 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
             </div>
             {user && user.id === content.user?.id && (
                 <section className="flex flex-col gap-2 mt-10">
-                    <EditPostInvite onSelect={() => setIsEdit(true)}/>
-                    <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 rounded-2xl animate-fade-left"
+                    <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 hover:bg-gray-200 rounded-2xl animate-fade-left"
+                         onClick={() => setIsEdit(true)}
+                    >
+                        <Pencil size={36} strokeWidth={1}/>
+                    </div>
+                    <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 hover:bg-gray-200 rounded-2xl animate-fade-left"
                          onClick={() => setIsPostDeleting(true)}
                     >
                         <Trash size={36} strokeWidth={1}/>
@@ -136,7 +138,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     errors={errors}
                     onChangePost={setContent}
                     onSubmitPost={handleUpdatePost}
-                    isNeedPreview={false}
+                    onPreview={null}
                 />
             </ModalContainer>
             <ModalContainer isOpen={isPostDeleting} onClose={() => setIsPostDeleting(false)}>
