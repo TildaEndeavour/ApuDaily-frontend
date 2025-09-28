@@ -47,12 +47,19 @@ const Posts = () => {
     });
 
     return (
-        <div className="ml-64">
-            <div className="flex flex-wrap justify-start gap-12 pt-12 pb-12">
+        <div className="flex w-full animate-fade-down">
+            {posts.length > 0 ?
+            <div className="ml-20 flex flex-wrap justify-start gap-12 pt-12 pb-12 w-full">
                 {posts.map((post: Post) => {
-                    return <PostCard onSelect={() => handleSelectPost(post.id)} key={post.id} post={post}/>
+                    return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post}/>
                 })}
+            </div> :
+            <div className="h-screen w-full flex justify-center items-center">
+                <h1>
+                    There is no content
+                </h1>
             </div>
+            }
             {hasMore && (
                 <div ref={loadingRef}>
                     {isLoading && <p>Loading...</p>}

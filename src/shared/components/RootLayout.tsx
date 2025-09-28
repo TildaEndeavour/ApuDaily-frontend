@@ -5,7 +5,9 @@ const RootLayout = () => {
     return (
         <div>
             <Sidebar/>
-            <Outlet/>
+            <div className="ml-21">
+                <Outlet/>
+            </div>
         </div>
     );
 }
