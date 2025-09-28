@@ -1,7 +1,18 @@
 @import "tailwindcss";
+@import "tailwindcss-animated";
 
 html, body {
     font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    display: block;
+    font-size: 2em; /* This translates to approximately 32px if the browser's default font-size is 16px */
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }
 
 .ql-snow .ql-picker.ql-size .ql-picker-label[data-value]::before,
