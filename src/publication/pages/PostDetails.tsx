@@ -7,7 +7,7 @@ import {getUserDetails} from "../../auth/services/auth.ts";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import type User from "../../auth/model/User.ts";
 import EditPostInvite from "../components/EditPostInvite.tsx";
-import ModalCard from "../../shared/components/ModalCard.tsx";
+import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostForm from "../components/PostForm.tsx";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import {validatePostForm} from "../services/validation.ts";
@@ -15,6 +15,7 @@ import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import {deletePost, updatePost, uploadTagsToServer} from "../services/requests.ts";
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
+import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -22,6 +23,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     const [user, setUser] = useState<User>(null);
     const [content, setContent]= useState<Post>((postPreview === null) ? response.body : postPreview);
     const [isEdit, setIsEdit] = useState(false);
+    const [isPostDeleting, setIsPostDeleting] = useState(false);
     const [errors, setErrors] = useState<FormValidator>({
         isValid: false,
         messages: {}
@@ -111,24 +113,24 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content.content) }}>
                     </div>
                 </article>
-                <section className="px-4 py-4 my-5 flex flex-row gap-4 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
+                {(content.tags && content.tags?.length > 0) && <section className="px-4 py-4 my-5 flex flex-row gap-4 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
                  bg-gray-100 rounded-3xl shadow-2xl">
                     {content.tags && content.tags.map(tag => {
                         return <span key={tag.name} className="p-2 flex flex-row gap-2 bg-gray-100 rounded-3xl border-1"><Tag size={24} strokeWidth={1}/>{tag.name}</span>
                     })}
-                </section>
+                </section>}
             </div>
             {user && user.id === content.user?.id && (
                 <section className="flex flex-col gap-2 mt-10">
                     <EditPostInvite onSelect={() => setIsEdit(true)}/>
                     <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 rounded-2xl animate-fade-left"
-                         onClick={() => handleDeletePost()}
+                         onClick={() => setIsPostDeleting(true)}
                     >
                         <Trash size={36} strokeWidth={1}/>
                     </div>
                 </section>
             )}
-            <ModalCard isOpen={isEdit} onClose={() => setIsEdit(false)}>
+            <ModalContainer isOpen={isEdit} onClose={() => setIsEdit(false)}>
                 <PostForm
                     post={content}
                     errors={errors}
@@ -136,7 +138,14 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     onSubmitPost={handleUpdatePost}
                     isNeedPreview={false}
                 />
-            </ModalCard>
+            </ModalContainer>
+            <ModalContainer isOpen={isPostDeleting} onClose={() => setIsPostDeleting(false)}>
+                <ConfirmModal
+                    question="Do you really want to delete this post?"
+                    onConfirm={() => handleDeletePost()}
+                    onCancel={() => setIsPostDeleting(false)}
+                />
+            </ModalContainer>
         </div>
     );
 }

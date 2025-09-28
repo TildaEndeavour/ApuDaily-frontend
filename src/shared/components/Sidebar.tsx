@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {House, Menu, Pencil, Search} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import UserBadge from "../../auth/components/UserBadge.tsx";
-import ModalCard from "./ModalCard.tsx";
+import ModalContainer from "./ModalContainer.tsx";
 import LoginForm from "../../auth/components/LoginForm.tsx";
 import type User from "../../auth/model/User.ts";
 import {getUserDetails} from "../../auth/services/auth.ts";

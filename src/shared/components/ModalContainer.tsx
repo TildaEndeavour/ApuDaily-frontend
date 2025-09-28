@@ -7,7 +7,7 @@ interface PostPreviewProps{
     children: React.ReactNode;
 }
 
-const ModalCard: React.FC<PostPreviewProps> = ({isOpen, onClose, children}) => {
+const ModalContainer: React.FC<PostPreviewProps> = ({isOpen, onClose, children}) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -36,4 +36,4 @@ const ModalCard: React.FC<PostPreviewProps> = ({isOpen, onClose, children}) => {
     );
 }
 
-export default ModalCard;
+export default ModalContainer;

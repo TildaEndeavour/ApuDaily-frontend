@@ -3,7 +3,7 @@ import {TagBubble} from "./TagBubble.tsx";
 import QuillEditor from "./Editor.tsx";
 import React, {type FormEvent, useEffect, useRef, useState} from "react";
 import type Quill from "quill";
-import ModalCard from "../../shared/components/ModalCard.tsx";
+import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import {isTag} from "../services/validation.ts";
 import {type Category, loader as loadAvailableCategories} from "../model/Category.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
@@ -106,11 +106,11 @@ const PostForm: React.FC<{
                             className="rounded-3xl border-gray-100 w-48 h-16 hover:bg-green-300 shadow-2xl/30"
                             onClick={() => setIsPreviewOpen(true)}
                     >Preview</button> }
-                    <ModalCard isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
+                    <ModalContainer isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
                         <div className="h-240 my-auto overflow-y-auto">
                             <PostDetails postPreview={post}/>
                         </div>
-                    </ModalCard>
+                    </ModalContainer>
                 </section>
             </div>
             <section className="flex flex-row w-full border-b-1">
