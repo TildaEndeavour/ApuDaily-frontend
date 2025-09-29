@@ -3,6 +3,7 @@ import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
 import axios from "axios";
+import SearchBar from "../../shared/components/SearchBar.tsx";
 
 const Posts = () => {
 
@@ -47,19 +48,20 @@ const Posts = () => {
     });
 
     return (
-        <div className="flex w-full animate-fade-down">
-            {posts.length > 0 ?
-            <div className="ml-20 flex flex-wrap justify-start gap-12 pt-12 pb-12 w-full">
-                {posts.map((post: Post) => {
-                    return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post}/>
-                })}
-            </div> :
-            <div className="h-screen w-full flex justify-center items-center">
-                <h1>
-                    There is no content
-                </h1>
+        <div className="flex flex-col items-center pt-16">
+            <SearchBar/>
+            <div className="w-11/12 mt-10 flex justify-center animate-fade-down">
+                {posts.length > 0 ?
+                    <div className="ml-20 flex flex-wrap justify-start gap-12 pt-12 pb-12 w-full">
+                        {posts.map((post: Post) => {
+                            return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post}/>
+                        })}
+                    </div> :
+                    <h1>
+                        There is no content
+                    </h1>
+                }
             </div>
-            }
             {hasMore && (
                 <div ref={loadingRef}>
                     {isLoading && <p>Loading...</p>}
