@@ -1,6 +1,6 @@
 import {useLoaderData, useNavigate} from "react-router-dom";
 import PostCard from "../components/PostCard.tsx";
-import {use, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
 import axios from "axios";
 import SearchBar from "../../shared/components/SearchBar.tsx";
@@ -10,7 +10,6 @@ const Posts = () => {
     const [posts, setPosts] = useState<Post[]>(useLoaderData().body.content);
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [isGridLayout, setIsGridLayout] = useState(true);
     const [hasMore, setHasMore] = useState(!useLoaderData().last);
     const navigate = useNavigate();
 
@@ -49,25 +48,27 @@ const Posts = () => {
     });
 
     return (
-        <div className="flex flex-col items-center pt-16">
-            <SearchBar onChangeLayout={setIsGridLayout}/>
-            <div className={"mt-8 flex justify-center animate-fade-down" + (isGridLayout ? " w-10/12" : " w-8/12")}>
+        <div className="flex flex-row pt-8 h-screen">
+            <div className="w-8/12 pl-24 flex animate-fade-down">
                 {posts.length > 0 ?
-                    <div className={"flex flex-wrap justify-start pb-12 w-full" + (isGridLayout ? " gap-12" : " gap-4")}>
+                    <div className="flex flex-wrap justify-start pb-12 w-full gap-4 overflow-y-auto">
                         {posts.map((post: Post) => {
-                            return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post} isGridLayout={isGridLayout}/>
+                            return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post}/>
                         })}
+                        {hasMore && (
+                            <div ref={loadingRef}>
+                                {isLoading && <p>Loading...</p>}
+                            </div>
+                        )}
                     </div> :
                     <h1>
                         There is no content
                     </h1>
                 }
             </div>
-            {hasMore && (
-                <div ref={loadingRef}>
-                    {isLoading && <p>Loading...</p>}
-                </div>
-            )}
+            <section className="w-4/12 px-8 animate-fade-left">
+                <SearchBar />
+            </section>
         </div>
     );
 }
