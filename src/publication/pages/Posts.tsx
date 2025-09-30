@@ -3,7 +3,8 @@ import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
 import axios from "axios";
-import SearchBar from "../../shared/components/SearchBar.tsx";
+import PostSearchForm from "../components/PostSearchForm.tsx";
+import PostPreview from "../components/PostPreview.tsx";
 
 const Posts = () => {
 
@@ -49,7 +50,7 @@ const Posts = () => {
 
     return (
         <div className="flex flex-row pt-8 h-screen">
-            <div className="w-8/12 pl-24 flex animate-fade-down">
+            <div className="w-8/12 pl-24 flex justify-center animate-fade-down">
                 {posts.length > 0 ?
                     <div className="flex flex-wrap justify-start pb-12 w-full gap-4 overflow-y-auto">
                         {posts.map((post: Post) => {
@@ -67,7 +68,7 @@ const Posts = () => {
                 }
             </div>
             <section className="w-4/12 px-8 animate-fade-left">
-                <SearchBar />
+                <PostSearchForm/>
             </section>
         </div>
     );

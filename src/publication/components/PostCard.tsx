@@ -11,10 +11,8 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
     const [isShowingPreview, setIsShowingPreview] = useState(false);
 
     return (
-        <div className="flex flex-row w-full">
-            <div onClick={onSelect}
-                    className="p-4 w-full h-40 border rounded-l-3xl shadow-2xl flex flex-row cursor-pointer gap-4
-                               animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both">
+        <div className="flex flex-row w-full h-fit animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both">
+            <div onClick={onSelect} className="p-4 w-full h-40 border-l-1 border-t-1 border-b-1 rounded-l-3xl shadow-2xl flex flex-row cursor-pointer gap-4">
                 <section className="h-full w-3/10 flex flex-row justify-center items-center">
                     {post.thumbnail ? (
                         <img className="rounded-2xl w-full h-full object-cover" src={BASE_URL + post.thumbnail.url} alt="thumbnail"/>
@@ -45,7 +43,7 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
                     </p>
                 </section>
             </div>
-            <button className="px-8 bg-gray-200 hover:bg-gray-300 rounded-r-3xl" onClick={() => setIsShowingPreview(true)}>
+            <button className="px-8 bg-gray-200 hover:bg-gray-300 rounded-r-3xl border-1" onClick={() => setIsShowingPreview(true)}>
                 <ScanEye size={48} strokeWidth={1}/>
             </button>
             <ModalContainer isOpen={isShowingPreview} onClose={() => setIsShowingPreview(false)}>
