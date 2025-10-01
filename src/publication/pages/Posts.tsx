@@ -3,11 +3,17 @@ import PostCard from "../components/PostCard.tsx";
 import {useEffect, useRef, useState} from "react";
 import type {Post} from "../model/Post.ts";
 import axios from "axios";
-import PostSearchForm from "../components/PostSearchForm.tsx";
-import PostPreview from "../components/PostPreview.tsx";
+import PostSearchForm from "../components/post-search-form/PostSearchForm.tsx";
+import type {PostFilter} from "../model/PostFilter.ts";
 
 const Posts = () => {
 
+    const [postFilter, setPostFilter] = useState<PostFilter>({
+        searchQuery: "",
+        users: [],
+        tags: [],
+        category: []
+    });
     const [posts, setPosts] = useState<Post[]>(useLoaderData().body.content);
     const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +35,6 @@ const Posts = () => {
         setIsLoading(false);
     }
 
-    const handleSelectPost = (postId: number) => {
-        navigate(`/posts/${postId}`);
-    }
-
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -49,12 +51,12 @@ const Posts = () => {
     });
 
     return (
-        <div className="flex flex-row pt-8 h-screen">
+        <div className="flex flex-row pt-8">
             <div className="w-8/12 pl-24 flex justify-center animate-fade-down">
                 {posts.length > 0 ?
-                    <div className="flex flex-wrap justify-start pb-12 w-full gap-4 overflow-y-auto">
+                    <div className="w-full flex flex-col gap-4 overflow-y-auto">
                         {posts.map((post: Post) => {
-                            return <PostCard onSelect={() => handleSelectPost(post.id!)} key={post.id} post={post}/>
+                            return <PostCard onSelect={() => navigate(`/posts/${post.id!}`)} key={post.id} post={post}/>
                         })}
                         {hasMore && (
                             <div ref={loadingRef}>
@@ -68,7 +70,7 @@ const Posts = () => {
                 }
             </div>
             <section className="w-4/12 px-8 animate-fade-left">
-                <PostSearchForm/>
+                <PostSearchForm filter={postFilter} onUpdateFilter={setPostFilter} submitFilter={() => {}}/>
             </section>
         </div>
     );

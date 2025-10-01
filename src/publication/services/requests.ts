@@ -22,6 +22,22 @@ export const uploadTagsToServer = async (tags: Tag[]) => {
     }
 };
 
+export const loadAllTagsFromServer = async() => {
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/tags');
+    return {
+        status: response.status,
+        body: response.data,
+    };
+}
+
+export const loadAllUserProfiles = async() => {
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/profiles');
+    return {
+        status: response.status,
+        body: response.data,
+    };
+}
+
 export const uploadPost = async(requestDto: PostCreateRequestDto) => {
     try {
         const response = await axios.post(

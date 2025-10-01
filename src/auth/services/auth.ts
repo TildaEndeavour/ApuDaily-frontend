@@ -20,7 +20,7 @@ export const signUp = async(requestBody: SignUpRequest) => {
 
 export const getUserDetails = async (accessToken: string) => {
     const response = await axios.get(
-        import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users',
+        import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/me',
         {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
