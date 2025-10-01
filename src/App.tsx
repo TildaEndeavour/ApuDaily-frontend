@@ -5,7 +5,7 @@ import Posts from "./publication/pages/Posts.tsx";
 import NewPost from "./publication/pages/NewPost.tsx";
 import ErrorPage from "./shared/pages/ErrorPage.tsx";
 import AuthProvider from "./auth/providers/AuthProvider.tsx";
-import {postDetailsLoader, postsLoader} from "./publication/services/loaders.ts";
+import {postDetailsLoader, postLoader} from "./publication/services/loaders.ts";
 import PostDetails from "./publication/pages/PostDetails.tsx";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
             {
                 path: "/posts",
                 element: <Posts/>,
-                loader: postsLoader,
+                loader: postLoader,
                 errorElement: <ErrorPage/>
             },
             {

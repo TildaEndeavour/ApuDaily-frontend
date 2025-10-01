@@ -64,11 +64,18 @@ const PostSearchForm: React.FC<{
         });
     };
 
+    const updateQuery = (query: string) => {
+        onUpdateFilter(prev => ({
+            ...prev,
+            searchQuery: query
+        }));
+    };
+
     return loading ? (
         <div>Loading...</div>
     ) : (
         <div>
-            <SearchBar />
+            <SearchBar onUpdateQuery={updateQuery} />
             <br className="mt-6" />
 
             <SearchFormSection
@@ -107,7 +114,7 @@ const PostSearchForm: React.FC<{
             <br className="mb-6" />
             <button
                 className="w-full p-4 border-1 bg-gray-200 rounded-3xl"
-                onClick={submitFilter}
+                onClick={() => submitFilter()}
             >
                 Show results
             </button>

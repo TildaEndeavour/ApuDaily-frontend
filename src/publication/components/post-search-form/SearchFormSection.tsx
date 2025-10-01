@@ -15,7 +15,7 @@ const SearchFormSection: React.FC<{
     const [isShowModal, setIsShowModal] = useState(false);
 
     return (
-        <section className="pt-3 px-6 pb-6 flex flex-col border-b-1">
+        <section className="pt-3 px-6 flex flex-col border-b-1">
             <section className="flex flex-row justify-between">
                     <span className="flex flex-row items-center mb-4 gap-4">
                         {badge}
