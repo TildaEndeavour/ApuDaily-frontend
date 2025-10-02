@@ -3,6 +3,7 @@ import React, {type ReactNode, useState} from "react";
 import CollectionPicker from "../../../shared/components/CollectionPicker.tsx";
 
 const SearchFormSection: React.FC<{
+    placeholder: string,
     badge: ReactNode,
     itemIcon: ReactNode,
     name: string,
@@ -11,7 +12,7 @@ const SearchFormSection: React.FC<{
     selectedItems: any[],
     onSelectItem: (item: any) => void,
     onRemoveItem: (item: any) => void
-}> = ({badge, itemIcon, name, defaultMessage, items, selectedItems, onSelectItem, onRemoveItem}) => {
+}> = ({placeholder, badge, itemIcon, name, defaultMessage, items, selectedItems, onSelectItem, onRemoveItem}) => {
     const [isShowModal, setIsShowModal] = useState(false);
 
     return (
@@ -39,7 +40,7 @@ const SearchFormSection: React.FC<{
                       </>
                 }
             </span>
-            {isShowModal && <CollectionPicker items={items} selectedItems={selectedItems} onSelectItem={onSelectItem}/>}
+            {isShowModal && <CollectionPicker placeholder={placeholder} items={items} selectedItems={selectedItems} onSelectItem={onSelectItem}/>}
         </section>
     );
 }

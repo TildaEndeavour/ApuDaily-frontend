@@ -79,6 +79,7 @@ const PostSearchForm: React.FC<{
             <br className="mt-6" />
 
             <SearchFormSection
+                placeholder="Enter author"
                 items={availableAuthors}
                 itemIcon={<UserIcon size={24} strokeWidth={1} />}
                 selectedItems={filter.users}
@@ -90,6 +91,7 @@ const PostSearchForm: React.FC<{
             />
 
             <SearchFormSection
+                placeholder="Enter tag"
                 items={availableTags}
                 itemIcon={<TagIcon size={24} strokeWidth={1} />}
                 selectedItems={filter.tags}
@@ -101,6 +103,7 @@ const PostSearchForm: React.FC<{
             />
 
             <SearchFormSection
+                placeholder="Enter category"
                 items={availableCategories}
                 itemIcon={<Map size={24} strokeWidth={1}/>}
                 selectedItems={filter.category}

@@ -2,12 +2,13 @@ import {useState} from "react";
 import {Search} from "lucide-react";
 
 type CollectionPickerProps = {
+    placeholder: string,
     items: any[],
     selectedItems: any[],
     onSelectItem: (item: any) => void
 };
 
-const CollectionPicker = ({ items, selectedItems, onSelectItem }: CollectionPickerProps) => {
+const CollectionPicker = ({placeholder, items, selectedItems, onSelectItem }: CollectionPickerProps) => {
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -23,7 +24,7 @@ const CollectionPicker = ({ items, selectedItems, onSelectItem }: CollectionPick
                 <Search size={24} strokeWidth={1}/>
                 <input
                     id="search"
-                    placeholder="Enter tag name..."
+                    placeholder={placeholder}
                     className="w-full h-fit focus:outline-none rounded-3xl"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
