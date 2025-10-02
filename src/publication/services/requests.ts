@@ -3,6 +3,8 @@ import axios from "axios";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
+import type {PostFilter} from "../model/PostFilter.ts";
+import type {PostSearchRequestDto} from "../model/dto/PostSearchRequestDto.ts";
 
 export const uploadTagsToServer = async (tags: Tag[]) => {
     try {
@@ -21,6 +23,22 @@ export const uploadTagsToServer = async (tags: Tag[]) => {
         throw new Error("Tags upload error");
     }
 };
+
+export const loadAllTagsFromServer = async() => {
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/tags');
+    return {
+        status: response.status,
+        body: response.data,
+    };
+}
+
+export const loadAllUserProfiles = async() => {
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/profiles');
+    return {
+        status: response.status,
+        body: response.data,
+    };
+}
 
 export const uploadPost = async(requestDto: PostCreateRequestDto) => {
     try {
@@ -84,3 +102,33 @@ export const deletePost = async (requestDto: PostDeleteRequestDto) => {
         throw new Error("Post deletion error");
     }
 };
+
+export const searchPosts = async (
+    requestDto: PostSearchRequestDto,
+    pageSize: number = 10,
+    pageNumber: number = 0
+) => {
+    try {
+        const response = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/posts/search`,
+            requestDto,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                params: {
+                    pageSize,
+                    pageNumber,
+                }
+            }
+        );
+
+        return {
+            status: response.status,
+            body: response.data
+        };
+    } catch (error: unknown) {
+        throw new Error("Post search error");
+    }
+};
+
