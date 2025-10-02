@@ -37,10 +37,11 @@ const Posts = () => {
     }
 
     const applyFilter = async () => {
+        setPosts([]);
         const request = convertPostFilterToDto(postFilter);
         const response = await searchPosts(request, 10, 0);
         setPosts(() => response.body.content);
-        setPage(0);
+        setPage(1);
         setHasMore(!response.body.last);
     };
 
@@ -60,7 +61,7 @@ const Posts = () => {
     });
 
     return (
-        <div className="h-screen flex flex-row pt-8">
+        <div className="h-full w-full flex flex-row py-8">
             <div className="w-8/12 pl-24 flex justify-center animate-fade-down">
                 {posts.length > 0 ?
                     <div className="w-full flex flex-col gap-4 overflow-y-auto">
@@ -78,7 +79,7 @@ const Posts = () => {
                     </h1>
                 }
             </div>
-            <section className="w-4/12 px-8 animate-fade-left">
+            <section className="fixed right-0 top-8 justify-end w-4/12 px-8 animate-fade-left">
                 <PostSearchForm filter={postFilter} onUpdateFilter={setPostFilter} submitFilter={applyFilter}/>
             </section>
         </div>
