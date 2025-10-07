@@ -15,6 +15,7 @@ import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import type {User} from "../../auth/model/User.ts";
+import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -88,7 +89,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     }, [] );
 
     return(
-        <div className="mx-auto w-360 flex flex-row gap-2">
+        <div className="mx-auto w-360 flex flex-col gap-2">
             <div className="mt-10">
                 <article className="px-16 py-12 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
                             bg-gray-100 rounded-3xl shadow-2xl">
@@ -96,13 +97,13 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     <section className="flex flex-row justify-between mb-8">
                         <h4 className="font-bold">{content.category?.name}</h4>
                         <span>
-                {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    timeZone: 'UTC'
-                })}
-            </span>
+                            {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                timeZone: 'UTC'
+                            })}
+                         </span>
                     </section>
                     <h1 className="mb-6 ">
                         {content.title}
@@ -132,6 +133,9 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     </div>
                 </section>
             )}
+            <section className="flex justify-end">
+                <CommentaryForm/>
+            </section>
             <ModalContainer isOpen={isEdit} onClose={() => setIsEdit(false)}>
                 <PostForm
                     post={content}
