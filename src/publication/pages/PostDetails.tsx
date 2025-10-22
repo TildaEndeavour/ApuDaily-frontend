@@ -16,6 +16,8 @@ import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import type {User} from "../../auth/model/User.ts";
 import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
+import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
+import {uploadCommentary} from "../../commentary/services/requests.ts";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -73,6 +75,12 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         setIsEdit(false);
     }
 
+    const handleSubmitCommentary = async (e: FormEvent<HTMLFormElement>, requestDto: CommentaryCreateRequestDto) => {
+        e.preventDefault();
+        console.log(requestDto);
+        await uploadCommentary(requestDto);
+    }
+
     useEffect(() => {
         if(!accessToken) return;
         (async () => {
@@ -86,11 +94,11 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                 console.log(error);
             }
         })();
-    }, [] );
+    }, []);
 
     return(
-        <div className="mx-auto w-360 flex flex-col gap-2">
-            <div className="mt-10">
+        <div className="w-360 mx-auto flex flex-row gap-2">
+            <section className="mt-10 flex flex-col gap-2">
                 <article className="px-16 py-12 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
                             bg-gray-100 rounded-3xl shadow-2xl">
 
@@ -118,7 +126,15 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                         return <span key={tag.name} className="p-2 flex flex-row gap-2 bg-gray-100 rounded-3xl border-1"><Tag size={24} strokeWidth={1}/>{tag.name}</span>
                     })}
                 </section>}
-            </div>
+                <section className="flex justify-end">
+                    <CommentaryForm
+                        postId={content.id!}
+                        parentCommentId={null}
+                        onSubmit={handleSubmitCommentary}
+                    />
+                </section>
+                <div className="mt-20"> </div>
+            </section>
             {user && user.id === content.user?.id && (
                 <section className="flex flex-col gap-2 mt-10">
                     <div className="p-8 w-fit h-fit shadow-2xl bg-gray-100 hover:bg-gray-200 rounded-2xl animate-fade-left"
@@ -133,9 +149,6 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                     </div>
                 </section>
             )}
-            <section className="flex justify-end">
-                <CommentaryForm/>
-            </section>
             <ModalContainer isOpen={isEdit} onClose={() => setIsEdit(false)}>
                 <PostForm
                     post={content}

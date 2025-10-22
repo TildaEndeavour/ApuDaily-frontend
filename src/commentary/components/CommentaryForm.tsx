@@ -1,12 +1,22 @@
-const CommentaryForm = () => {
+import React, {useState} from "react";
+import type {CommentaryFormProps} from "../model/CommentaryFormProps.ts";
+
+const CommentaryForm: React.FC<CommentaryFormProps> = ({postId, parentCommentId, onSubmit}) => {
+    const [commentary, setCommentary] = useState("");
+
     return (
-        <div className="w-2/3 h-fit p-4 shadow-2xl rounded-3xl">
-            <textarea className="w-full h-fit max-h-30 p-4 border-b-1"/>
-            <section className="flex flex-row justify-end gap-4">
-                <button className="p-2 rounded-3xl border-1">Cancel</button>
+        <form
+            className="w-full h-fit p-4 shadow-2xl rounded-3xl"
+            onSubmit={(e) => onSubmit(e, {postId: postId, parentCommentId: parentCommentId, content: commentary})}
+        >
+            <textarea
+                className="w-full h-fit max-h-30 p-4 border-b-1"
+                onChange={(e) => setCommentary(e.target.value)}
+            />
+            <section className="flex flex-row justify-end">
                 <button className="p-2 rounded-3xl border-1">Send commentary</button>
             </section>
-        </div>
+        </form>
     );
 }
 

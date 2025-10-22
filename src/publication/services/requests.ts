@@ -40,6 +40,14 @@ export const loadAllUserProfiles = async() => {
     };
 }
 
+export const loadUserProfileById = async(id: number) => {
+    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + `/users/profiles/${id}`);
+    return {
+        status: response.status,
+        body: response.data
+    };
+}
+
 export const uploadPost = async(requestDto: PostCreateRequestDto) => {
     try {
         const response = await axios.post(
