@@ -1,7 +1,7 @@
 import type {Post} from "../model/Post.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import DOMPurify from "dompurify";
-import {Pencil, Tag, Trash} from "lucide-react";
+import {MessageCircleMore, Pencil, Tag, Trash} from "lucide-react";
 import type {default as TagModel} from "../model/Tag.ts";
 import React, {type FormEvent, useEffect, useState} from "react";
 import {getUserDetails} from "../../auth/services/auth.ts";
@@ -18,12 +18,16 @@ import type {User} from "../../auth/model/User.ts";
 import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
 import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
 import {uploadCommentary} from "../../commentary/services/requests.ts";
+import type {Commentary} from "../../commentary/model/Commentary.ts";
+import {loadCommentariesByFilter} from "../../commentary/services/loaders.ts";
+import CommentaryBubble from "../../commentary/components/CommentaryBubble.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
-    const response = useLoaderData();
+    const loader = useLoaderData();
     const [user, setUser] = useState<User>(null);
-    const [content, setContent]= useState<Post>((postPreview === null) ? response.body : postPreview);
+    const [content, setContent] = useState<Post>((postPreview === null) ? loader.post : postPreview);
+    const [commentaries, setCommentaries] = useState<Commentary[]>(loader.commentaries);
     const [isEdit, setIsEdit] = useState(false);
     const [isPostDeleting, setIsPostDeleting] = useState(false);
     const [errors, setErrors] = useState<FormValidator>({
@@ -75,9 +79,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         setIsEdit(false);
     }
 
-    const handleSubmitCommentary = async (e: FormEvent<HTMLFormElement>, requestDto: CommentaryCreateRequestDto) => {
-        e.preventDefault();
-        console.log(requestDto);
+    const handleSubmitCommentary = async (requestDto: CommentaryCreateRequestDto) => {
         await uploadCommentary(requestDto);
     }
 
@@ -95,6 +97,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
             }
         })();
     }, []);
+
 
     return(
         <div className="w-360 mx-auto flex flex-row gap-2">
@@ -132,6 +135,12 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                         parentCommentId={null}
                         onSubmit={handleSubmitCommentary}
                     />
+                </section>
+                <section className="w-full flex flex-col gap-4">
+                    {commentaries.map(commentary =>
+                        <section key={commentary.id}>
+                            <CommentaryBubble key={commentary.id} commentary={commentary}/>
+                        </section>)}
                 </section>
                 <div className="mt-20"> </div>
             </section>

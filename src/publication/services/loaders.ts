@@ -1,6 +1,7 @@
 import axios from "axios";
 import type {LoaderFunctionArgs} from "react-router-dom";
 import type {PostSearchRequestDto} from "../model/dto/PostSearchRequestDto.ts";
+import {loadCommentariesByFilter} from "../../commentary/services/loaders.ts";
 
 export const postLoader = async () => {
     try {
@@ -37,10 +38,14 @@ export const postLoader = async () => {
 
 export async function postDetailsLoader({ params }: LoaderFunctionArgs) {
     const { id } = params;
-    const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + `/posts/${id}`);
-
+    const postResponse = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + `/posts/${id}`);
+    const post = postResponse.data;
+    const commentariesResponse = await loadCommentariesByFilter({postId: Number(id), userId: null, commentId: null, parentCommentId: null});
+    const commentaries = commentariesResponse.body.content;
+    console.log(postResponse);
+    console.log(commentariesResponse);
     return {
-        status: response.status,
-        body: response.data,
+        post: post,
+        commentaries: commentaries
     };
 }

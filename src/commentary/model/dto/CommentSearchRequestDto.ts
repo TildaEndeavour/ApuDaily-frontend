@@ -1,6 +1,6 @@
 export interface CommentSearchRequestDto {
-    id: number | null,
+    commentId: number | null,
     userId: number | null,
     postId: number | null,
-    parentCommentaryId: number | null
+    parentCommentId: number | null
 }
