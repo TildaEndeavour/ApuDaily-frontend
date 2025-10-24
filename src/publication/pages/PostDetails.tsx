@@ -15,9 +15,10 @@ import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
 import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
-import {uploadCommentary} from "../../commentary/services/requests.ts";
+import {deleteCommentary, uploadCommentary} from "../../commentary/services/requests.ts";
 import type {Commentary} from "../../commentary/model/Commentary.ts";
 import CommentaryBubble from "../../commentary/components/CommentaryBubble.tsx";
+import type {CommentaryDeleteRequestDto} from "../../commentary/model/dto/CommentaryDeleteRequestDto.ts";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -76,8 +77,11 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     }
 
     const handleSubmitCommentary = async (requestDto: CommentaryCreateRequestDto) => {
-        const response = await uploadCommentary(requestDto);
-        setCommentaries((prevCommentaries) => [...prevCommentaries, response.body]);
+        await uploadCommentary(requestDto);
+    }
+
+    const handleDeleteCommentary = async (requestDto: CommentaryDeleteRequestDto) => {
+        await deleteCommentary(requestDto);
     }
 
     return(
@@ -120,7 +124,12 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                 <section className="w-full mt-10 flex flex-col gap-12">
                     {commentaries.map(commentary =>
                         <section key={commentary.id}>
-                            <CommentaryBubble key={commentary.id} commentary={commentary}/>
+                            <CommentaryBubble
+                                key={commentary.id}
+                                commentary={commentary}
+                                onSubmitReply={handleSubmitCommentary}
+                                onDeleteCommentary={handleDeleteCommentary}
+                            />
                         </section>)}
                 </section>
                 <div className="mt-20"> </div>
