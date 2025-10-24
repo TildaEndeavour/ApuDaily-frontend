@@ -42,8 +42,6 @@ export async function postDetailsLoader({ params }: LoaderFunctionArgs) {
     const post = postResponse.data;
     const commentariesResponse = await loadCommentariesByFilter({postId: Number(id), userId: null, commentId: null, parentCommentId: null});
     const commentaries = commentariesResponse.body.content;
-    console.log(postResponse);
-    console.log(commentariesResponse);
     return {
         post: post,
         commentaries: commentaries

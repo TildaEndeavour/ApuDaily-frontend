@@ -80,7 +80,8 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     }
 
     const handleSubmitCommentary = async (requestDto: CommentaryCreateRequestDto) => {
-        await uploadCommentary(requestDto);
+        const response = await uploadCommentary(requestDto);
+        setCommentaries((prevCommentaries) => [...prevCommentaries, response.body]);
     }
 
     useEffect(() => {
@@ -136,7 +137,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                         onSubmit={handleSubmitCommentary}
                     />
                 </section>
-                <section className="w-full flex flex-col gap-4">
+                <section className="w-full mt-10 flex flex-col gap-12">
                     {commentaries.map(commentary =>
                         <section key={commentary.id}>
                             <CommentaryBubble key={commentary.id} commentary={commentary}/>
