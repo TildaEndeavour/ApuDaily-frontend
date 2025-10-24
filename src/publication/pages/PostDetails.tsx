@@ -1,10 +1,9 @@
 import type {Post} from "../model/Post.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import DOMPurify from "dompurify";
-import {MessageCircleMore, Pencil, Tag, Trash} from "lucide-react";
+import {Pencil, Tag, Trash} from "lucide-react";
 import type {default as TagModel} from "../model/Tag.ts";
-import React, {type FormEvent, useEffect, useState} from "react";
-import {getUserDetails} from "../../auth/services/auth.ts";
+import React, {type FormEvent, useState} from "react";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostForm from "../components/PostForm.tsx";
@@ -14,18 +13,16 @@ import {deletePost, updatePost, uploadTagsToServer} from "../services/requests.t
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
-import type {User} from "../../auth/model/User.ts";
 import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
 import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
 import {uploadCommentary} from "../../commentary/services/requests.ts";
 import type {Commentary} from "../../commentary/model/Commentary.ts";
-import {loadCommentariesByFilter} from "../../commentary/services/loaders.ts";
 import CommentaryBubble from "../../commentary/components/CommentaryBubble.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
+    const {user} = useAuth();
     const loader = useLoaderData();
-    const [user, setUser] = useState<User>(null);
     const [content, setContent] = useState<Post>((postPreview === null) ? loader.post : postPreview);
     const [commentaries, setCommentaries] = useState<Commentary[]>(loader.commentaries);
     const [isEdit, setIsEdit] = useState(false);
@@ -34,12 +31,11 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         isValid: false,
         messages: {}
     });
-    const { accessToken } = useAuth();
     const navigate = useNavigate();
 
     const handleDeletePost = async () => {
         const request: PostDeleteRequestDto = {
-            userId: user.id,
+            userId: user?.id,
             postId: content.id!
         }
 
@@ -83,22 +79,6 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         const response = await uploadCommentary(requestDto);
         setCommentaries((prevCommentaries) => [...prevCommentaries, response.body]);
     }
-
-    useEffect(() => {
-        if(!accessToken) return;
-        (async () => {
-            try {
-                const response = await getUserDetails(accessToken);
-
-                if (response.status === 200) {
-                    setUser(response.body);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        })();
-    }, []);
-
 
     return(
         <div className="w-360 mx-auto flex flex-row gap-2">

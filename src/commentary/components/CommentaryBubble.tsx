@@ -9,14 +9,17 @@ const CommentaryBubble: React.FC<{commentary: Commentary}> = ({commentary}) => {
 
     const [isReplying, setIsReplying] = useState(false);
     const [isShowReplies, setIsShowReplies] = useState(false);
+    const [replies, setReplies] = useState<Commentary[]>(commentary.replies ? commentary.replies : []);
 
     const submitReply = async (reply: CommentaryCreateRequestDto) => {
-        await uploadCommentary(reply);
+       const response = await uploadCommentary(reply);
+       setReplies((prevReplies) => [...prevReplies, response.body]);
+       setIsReplying(false);
     }
 
     return (
-        <div className="flex flex-col w-full gap-2">
-            <div className="border-l-1">
+        <div className="flex flex-col w-full gap-2 shadow-2xl p-4 border-l-1 rounded-r-3xl overflow-x-auto animate-fade-down">
+            <div>
                 <section className="px-4 flex flex-row gap-4">
                     {commentary.user.username} at {commentary.createdAt.toString()}
                     <button className="flex flex-row gap-2"
@@ -29,10 +32,10 @@ const CommentaryBubble: React.FC<{commentary: Commentary}> = ({commentary}) => {
                     {commentary.content}
                 </section>
                 {isReplying && <CommentaryForm postId={commentary.postId} parentCommentId={commentary.id} onSubmit={submitReply}/>}
-                {isShowReplies && commentary.replies?.map(reply =>
+                {isShowReplies && replies?.map(reply =>
                     <section className="flex flex-row mt-8">
                         <div className="w-6"/>
-                        <CommentaryBubble commentary={reply}/>
+                        <CommentaryBubble key={reply.id} commentary={reply}/>
                     </section>)}
             </div>
         </div>
