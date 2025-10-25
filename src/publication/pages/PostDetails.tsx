@@ -1,6 +1,5 @@
 import type {Post} from "../model/Post.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
-import DOMPurify from "dompurify";
 import {Pencil, Tag, Trash} from "lucide-react";
 import type {default as TagModel} from "../model/Tag.ts";
 import React, {type FormEvent, useState} from "react";
@@ -13,13 +12,8 @@ import {deletePost, updatePost, uploadTagsToServer} from "../services/requests.t
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
-import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
-import {deleteCommentary, uploadCommentary} from "../../commentary/services/requests.ts";
-import CommentaryBubble from "../../commentary/components/CommentaryBubble.tsx";
-import {useCommentTree} from "../../commentary/hooks/useCommentTree.ts";
-import type {Commentary} from "../../commentary/model/Commentary.ts";
-import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
 import CommentarySection from "../../commentary/components/CommentarySection.tsx";
+import PostContent from "../components/PostContent.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -79,35 +73,8 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
     return(
         <div className="w-360 mx-auto flex flex-row gap-2">
             <section className="mt-10 flex flex-col gap-2">
-                <article className="px-16 py-12 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
-                            bg-gray-100 rounded-3xl shadow-2xl">
-
-                    <section className="flex flex-row justify-between mb-8">
-                        <h4 className="font-bold">{content.category?.name}</h4>
-                        <span>
-                            {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                timeZone: 'UTC'
-                            })}
-                         </span>
-                    </section>
-                    <h1 className="mb-6 ">
-                        {content.title}
-                    </h1>
-                    <div className="h-fit ql-editor"
-                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content.content) }}>
-                    </div>
-                </article>
-                {(content.tags && content.tags?.length > 0) && <section className="px-4 py-4 my-5 flex flex-row gap-4 animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
-                 bg-gray-100 rounded-3xl shadow-2xl">
-                    {content.tags && content.tags.map(tag => {
-                        return <span key={tag.name} className="p-2 flex flex-row gap-2 bg-gray-100 rounded-3xl border-1"><Tag size={24} strokeWidth={1}/>{tag.name}</span>
-                    })}
-                </section>}
+                <PostContent content={content}/>
                 <CommentarySection postId={content.id!} commentaries={loader.commentaries}/>
-                <div className="mt-20"> </div>
             </section>
             {user && user.id === content.user?.id && (
                 <section className="flex flex-col gap-2 mt-10">
