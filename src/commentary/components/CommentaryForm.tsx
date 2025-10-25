@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import type {CommentaryFormProps} from "../model/CommentaryFormProps.ts";
 
-const CommentaryForm: React.FC<CommentaryFormProps> = ({postId, parentCommentId, onSubmit}) => {
-    const [commentary, setCommentary] = useState("");
+const CommentaryForm: React.FC<CommentaryFormProps> = ({postId, commentId, content, parentCommentId, onSubmit}) => {
+    const [commentary, setCommentary] = useState(content ? content : "");
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onSubmit({postId, parentCommentId, content: commentary});
+        onSubmit({postId, commentId, parentCommentId, content: commentary});
         setCommentary("");
     }
 
