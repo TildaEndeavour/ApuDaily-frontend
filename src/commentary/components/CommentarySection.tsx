@@ -42,6 +42,7 @@ const CommentarySection: React.FC<{postId: number, commentaries: Commentary[]}> 
                         />
                     </section>)}
             </section>
+            <div className="mt-20"> </div>
         </div>
     );
 }

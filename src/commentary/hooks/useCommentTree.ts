@@ -6,7 +6,7 @@ export const useCommentTree = (initialComments: Commentary[] = []) => {
 
     const addComment = useCallback((newComment: Commentary) => {
         setComments(prev =>
-            newComment.parentCommentary
+            newComment.parentCommentId
                 ? addReplyToTree(prev, newComment)
                 : [...prev, newComment]
         );
@@ -47,7 +47,7 @@ const addReplyToTree = (
     newReply: Commentary
 ): Commentary[] => {
     return nodes.map(node => {
-        if (node.id === newReply.parentCommentary?.id) {
+        if (node.id === newReply.parentCommentId) {
             return {
                 ...node,
                 replies: [...(node.replies ?? []), newReply]
