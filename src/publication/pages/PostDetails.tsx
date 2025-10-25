@@ -14,18 +14,18 @@ import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import CommentaryForm from "../../commentary/components/CommentaryForm.tsx";
-import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
 import {deleteCommentary, uploadCommentary} from "../../commentary/services/requests.ts";
-import type {Commentary} from "../../commentary/model/Commentary.ts";
 import CommentaryBubble from "../../commentary/components/CommentaryBubble.tsx";
-import type {CommentaryDeleteRequestDto} from "../../commentary/model/dto/CommentaryDeleteRequestDto.ts";
+import {useCommentTree} from "../../commentary/hooks/useCommentTree.ts";
+import type {Commentary} from "../../commentary/model/Commentary.ts";
+import type {CommentaryCreateRequestDto} from "../../commentary/model/dto/CommentaryCreateRequestDto.ts";
+import CommentarySection from "../../commentary/components/CommentarySection.tsx";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
     const {user} = useAuth();
     const loader = useLoaderData();
     const [content, setContent] = useState<Post>((postPreview === null) ? loader.post : postPreview);
-    const [commentaries, setCommentaries] = useState<Commentary[]>(loader.commentaries);
     const [isEdit, setIsEdit] = useState(false);
     const [isPostDeleting, setIsPostDeleting] = useState(false);
     const [errors, setErrors] = useState<FormValidator>({
@@ -76,14 +76,6 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         setIsEdit(false);
     }
 
-    const handleSubmitCommentary = async (requestDto: CommentaryCreateRequestDto) => {
-        await uploadCommentary(requestDto);
-    }
-
-    const handleDeleteCommentary = async (requestDto: CommentaryDeleteRequestDto) => {
-        await deleteCommentary(requestDto);
-    }
-
     return(
         <div className="w-360 mx-auto flex flex-row gap-2">
             <section className="mt-10 flex flex-col gap-2">
@@ -114,24 +106,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
                         return <span key={tag.name} className="p-2 flex flex-row gap-2 bg-gray-100 rounded-3xl border-1"><Tag size={24} strokeWidth={1}/>{tag.name}</span>
                     })}
                 </section>}
-                <section className="flex justify-end">
-                    <CommentaryForm
-                        postId={content.id!}
-                        parentCommentId={null}
-                        onSubmit={handleSubmitCommentary}
-                    />
-                </section>
-                <section className="w-full mt-10 flex flex-col gap-12">
-                    {commentaries.map(commentary =>
-                        <section key={commentary.id}>
-                            <CommentaryBubble
-                                key={commentary.id}
-                                commentary={commentary}
-                                onSubmitReply={handleSubmitCommentary}
-                                onDeleteCommentary={handleDeleteCommentary}
-                            />
-                        </section>)}
-                </section>
+                <CommentarySection postId={content.id!} commentaries={loader.commentaries}/>
                 <div className="mt-20"> </div>
             </section>
             {user && user.id === content.user?.id && (

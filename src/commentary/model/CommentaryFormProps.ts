@@ -3,5 +3,5 @@ import type {CommentaryCreateRequestDto} from "./dto/CommentaryCreateRequestDto.
 export interface CommentaryFormProps{
     postId: number,
     parentCommentId: number | null,
-    onSubmit: (requestDto: CommentaryCreateRequestDto) => void;
+    onSubmit: (comment: CommentaryCreateRequestDto) => void;
 }

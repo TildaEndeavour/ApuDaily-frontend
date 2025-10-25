@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import CommentaryForm from "./CommentaryForm.tsx";
-import type {CommentaryCreateRequestDto} from "../model/dto/CommentaryCreateRequestDto.ts";
 import {ChevronDown, ChevronUp, MessageCircleReply, PencilLine, Trash2} from "lucide-react";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import type {CommentaryBubbleProps} from "../model/CommentaryBubbleProps.ts";
+import type {CommentaryCreateRequestDto} from "../model/dto/CommentaryCreateRequestDto.ts";
 
 const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmitReply, onDeleteCommentary}) => {
 
@@ -31,7 +31,7 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
                             <button className="flex flex-row gap-2"><PencilLine size={24} strokeWidth={1}/>Edit</button>
                             <button
                                 className="flex flex-row gap-2"
-                                onClick={() => onDeleteCommentary({commentId: commentary.id})}
+                                onClick={() => onDeleteCommentary(commentary)}
                             >
                                 <Trash2 size={24} strokeWidth={1}/>Delete
                             </button>
