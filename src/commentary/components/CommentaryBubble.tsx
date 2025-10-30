@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import CommentaryForm from "./CommentaryForm.tsx";
 import {ChevronDown, ChevronUp, MessageCircleReply, PencilLine, Trash2} from "lucide-react";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import type {CommentaryBubbleProps} from "../model/CommentaryBubbleProps.ts";
 import type {CommentaryRequestDto} from "../model/CommentaryFormProps.ts";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmitReply, onUpdateCommentary, onDeleteCommentary}) => {
 

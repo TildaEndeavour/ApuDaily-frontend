@@ -1,33 +1,13 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import React, {
-    createContext,
     useCallback,
-    useContext,
     useEffect,
     useMemo,
     useState,
 } from "react";
 import type {User} from "../model/User.ts";
-import {getUserDetails} from "../services/auth.ts";
-
-interface AuthContextType {
-    accessToken: string | null;
-    refreshToken: string | null;
-    user: User | null;
-    setTokens: (access: string, refresh: string) => void;
-    setUser: (user: User) => void;
-    removeTokens: () => void;
-}
-
-export const authAxios = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
-});
-
-export const unauthAxios = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
-});
-
-const AuthContext = createContext<AuthContextType | null>(null);
+import {authAxios, getUserDetails, unauthAxios} from "../services/auth.ts";
+import { AuthContext } from "../hooks/useAuth.ts";
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
@@ -36,7 +16,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         const stored = localStorage.getItem("user");
         return stored ? JSON.parse(stored) : null;
     });
-
 
     useEffect(() => {
         if (accessToken) {
@@ -86,7 +65,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         const res = await unauthAxios.post("/users/auth/refresh", { refreshToken });
                         const newAccess = res.data?.token;
                         if (!newAccess) {
-                            throw new Error("Не удалось получить новый access token");
+                            throw new Error("Unable to obtain a new access token");
                         }
 
                         setTokens(newAccess, refreshToken);
@@ -123,7 +102,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                     localStorage.setItem("user", JSON.stringify(res.body));
                 }
             } catch (err) {
-                console.warn("Ошибка при получении данных пользователя", err);
+                console.warn("Error receiving user data", err);
                 removeTokens();
             }
         };
@@ -136,6 +115,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             accessToken,
             refreshToken,
             user,
+            setUser,
             setTokens,
             removeTokens,
         }),
@@ -143,14 +123,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     );
 
     return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-};
-
-export const useAuth = (): AuthContextType => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    return context;
 };
 
 export default AuthProvider;

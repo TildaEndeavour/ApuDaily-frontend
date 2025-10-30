@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
-import HomePage from "./home/pages/Home.tsx";
+import HomePage from "./shared/pages/Home.tsx";
 import RootLayout from "./shared/components/RootLayout.tsx";
 import Posts from "./publication/pages/Posts.tsx";
 import NewPost from "./publication/pages/NewPost.tsx";

@@ -1,9 +1,9 @@
-import {type ChangeEventHandler, type FormEvent, useState} from "react";
-import {useAuth} from "../providers/AuthProvider.tsx";
+import React, {type ChangeEventHandler, type FormEvent, useState} from "react";
 import {validateLoginForm} from "../services/validation.ts";
 import {login} from "../services/auth.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import type {LoginInputs} from "../model/AuthFormInputs.ts";
+import {useAuth} from "../hooks/useAuth.ts";
 
 const LoginForm: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
 

@@ -3,7 +3,6 @@ import {useLoaderData, useNavigate} from "react-router-dom";
 import {Pencil, Trash} from "lucide-react";
 import type {Tag} from "../model/Tag.ts";
 import React, {type FormEvent, useState} from "react";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostForm from "../components/PostForm.tsx";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
@@ -14,6 +13,7 @@ import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import CommentarySection from "../../commentary/components/CommentarySection.tsx";
 import PostContent from "../components/PostContent.tsx";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 

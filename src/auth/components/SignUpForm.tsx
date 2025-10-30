@@ -1,4 +1,4 @@
-import {type ChangeEventHandler, type FormEvent, useState} from "react";
+import React, {type ChangeEventHandler, type FormEvent, useState} from "react";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import {signUp} from "../services/auth.ts";
 import type {SignUpInputs} from "../model/AuthFormInputs.ts";

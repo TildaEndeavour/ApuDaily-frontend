@@ -7,8 +7,8 @@ import React, {useEffect, useRef, useState} from "react";
 import CommentaryBubble from "./CommentaryBubble.tsx";
 import type {CommentaryUpdateRequestDto} from "../model/dto/CommentaryUpdateRequestDto.ts";
 import {loadCommentariesByFilter} from "../services/loaders.ts";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import LoadingSpinner from "../../shared/components/LoadingSpinner.tsx";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const CommentarySection: React.FC<{postId: number}> = ({postId}) => {
 
