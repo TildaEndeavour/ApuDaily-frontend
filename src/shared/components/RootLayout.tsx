@@ -5,7 +5,9 @@ const RootLayout = () => {
     return (
         <div>
             <Sidebar/>
-            <Outlet/>
+            <section className="flex justify-center">
+                <Outlet/>
+            </section>
         </div>
     );
 }

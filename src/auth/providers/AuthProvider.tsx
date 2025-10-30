@@ -7,11 +7,15 @@ import React, {
     useMemo,
     useState,
 } from "react";
+import type {User} from "../model/User.ts";
+import {getUserDetails} from "../services/auth.ts";
 
 interface AuthContextType {
     accessToken: string | null;
     refreshToken: string | null;
+    user: User | null;
     setTokens: (access: string, refresh: string) => void;
+    setUser: (user: User) => void;
     removeTokens: () => void;
 }
 
@@ -28,6 +32,11 @@ const AuthContext = createContext<AuthContextType | null>(null);
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
     const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
+    const [user, setUser] = useState<User | null>(() => {
+        const stored = localStorage.getItem("user");
+        return stored ? JSON.parse(stored) : null;
+    });
+
 
     useEffect(() => {
         if (accessToken) {
@@ -48,9 +57,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     const removeTokens = useCallback(() => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
         delete axios.defaults.headers.common["Authorization"];
         setAccessToken(null);
         setRefreshToken(null);
+        setUser(null);
     }, []);
 
     useEffect(() => {
@@ -101,14 +112,34 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         };
     }, [accessToken, refreshToken, setTokens, removeTokens]);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!accessToken || user) return; // уже загружено или токена нет
+
+            try {
+                const res = await getUserDetails(accessToken);
+                if (res.status === 200) {
+                    setUser(res.body);
+                    localStorage.setItem("user", JSON.stringify(res.body));
+                }
+            } catch (err) {
+                console.warn("Ошибка при получении данных пользователя", err);
+                removeTokens();
+            }
+        };
+
+        fetchUser();
+    }, [accessToken]);
+
     const contextValue = useMemo(
         () => ({
             accessToken,
             refreshToken,
+            user,
             setTokens,
             removeTokens,
         }),
-        [accessToken, refreshToken, setTokens, removeTokens]
+        [accessToken, refreshToken, user, setTokens, removeTokens]
     );
 
     return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
