@@ -27,14 +27,14 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
             <div>
                 <section className="px-4 flex flex-row gap-2">
                     {commentary.user.username} at {commentary.createdAt.toString()}
-                    <button className="flex flex-row gap-2"
+                    {user && <button className="flex flex-row gap-2"
                         onClick={() => setIsReplying((prevState) => {
                             setIsUpdating(false);
                             return !prevState;
                         })}
                     >
                         <MessageCircleReply size={24} strokeWidth={1}/>Reply
-                    </button>
+                    </button>}
                     {(user?.id === commentary.user.id) &&
                         <section className="flex flex-row gap-2">
                             <button

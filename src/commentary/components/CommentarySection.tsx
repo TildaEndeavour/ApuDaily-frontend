@@ -8,6 +8,7 @@ import CommentaryBubble from "./CommentaryBubble.tsx";
 import type {CommentaryUpdateRequestDto} from "../model/dto/CommentaryUpdateRequestDto.ts";
 import {loadCommentariesByFilter} from "../services/loaders.ts";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
+import LoadingSpinner from "../../shared/components/LoadingSpinner.tsx";
 
 const CommentarySection: React.FC<{postId: number}> = ({postId}) => {
 
@@ -103,12 +104,12 @@ const CommentarySection: React.FC<{postId: number}> = ({postId}) => {
                         />
                     </section>)}
                 {hasMore && (
-                    <div className="border-1" ref={loadingRef}>
-                        {isLoading && <p>Loading...</p>}
+                    <div className="flex justify-center" ref={loadingRef}>
+                        {isLoading && <LoadingSpinner/>}
                     </div>
                 )}
             </section>}
-            <div className="mt-20"> </div>
+            <div className="mt-20"></div>
         </div>
     );
 }
