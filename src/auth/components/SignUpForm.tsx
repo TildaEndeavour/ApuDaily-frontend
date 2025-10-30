@@ -1,11 +1,16 @@
-import React, {type ChangeEventHandler, type FormEvent, useState} from "react";
+import React, {type ChangeEventHandler, type FormEvent, useEffect, useState} from "react";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
 import {signUp} from "../services/auth.ts";
 import type {SignUpInputs} from "../model/AuthFormInputs.ts";
 import {validateSignUpForm} from "../services/validation.ts";
 import axios from "axios";
+import type {Timezone} from "../../user/model/Timezone.ts";
+import LoadingSpinner from "../../shared/components/LoadingSpinner.tsx";
+import {loadAvailableTimezones} from "../../user/services/requests.ts";
 
 const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin }) => {
+
+    const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState<SignUpInputs>({
         username: '',
         email: '',
@@ -14,6 +19,32 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
     })
     const [formValidator, setFormValidator] = useState<FormValidator>();
     const [result, setResult] = useState("");
+    const [availableTimezones, setAvailableTimezones] = useState<Timezone[]>([]);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        async function loadTimezones(){
+            try {
+                const res = await loadAvailableTimezones();
+                const data = res.body;
+                if (isMounted) {
+                    setAvailableTimezones(data);
+                }
+            } catch (err) {
+                console.error("Loading categories error", err);
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        loadTimezones();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -49,7 +80,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="username"
                     name="username"
                     placeholder="Enter your nickname"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.username) &&
@@ -58,16 +89,31 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="email"
                     name="email"
                     placeholder="Enter your email"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
+                {loading
+                    ? <LoadingSpinner/>
+                    : <select
+                        id="timezone"
+                        name="timezone"
+                        className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
+                        defaultValue=""
+                    >
+                        <option value="" disabled hidden>Select timezone</option>
+                        {availableTimezones?.map((timezone: Timezone) => (
+                            <option key={timezone.id} value={timezone.name}>
+                                {timezone.name}
+                            </option>
+                        ))}
+                    </select>}
                 {(!formValidator?.isValid && formValidator?.messages.email) &&
                     <div className="text-xs text-red-900">{formValidator.messages.email}</div>}
                 <input
                     id="password"
                     name="password"
                     placeholder="Enter your password"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.password) &&
@@ -76,7 +122,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="confirmPassword"
                     name="confirmPassword"
                     placeholder="Confirm your password"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.confirmPassword) &&

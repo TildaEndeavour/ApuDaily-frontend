@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const loadTimezones = async() => {
+export const loadAvailableTimezones = async() => {
     const response = await axios.get(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/timezones');
     return {
         status: response.status,
