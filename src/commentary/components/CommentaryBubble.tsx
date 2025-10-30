@@ -70,7 +70,7 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
                     {isShowReplies ? <ChevronUp size={24} strokeWidth={1}/> : <ChevronDown size={24} strokeWidth={1}/>} Replies ({commentary.replies?.length})
                 </button>
                 {isShowReplies && commentary.replies?.map(reply =>
-                    <section className="flex flex-row mt-8">
+                    <section key={reply.id} className="flex flex-row mt-8">
                         <div className="w-6"/>
                         <CommentaryBubble key={reply.id} commentary={reply} onSubmitReply={onSubmitReply} onUpdateCommentary={onUpdateCommentary} onDeleteCommentary={onDeleteCommentary}/>
                     </section>)}

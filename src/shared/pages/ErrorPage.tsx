@@ -15,7 +15,7 @@ const ErrorPage = () => {
     }
 
     return(
-        <div className="h-48 w-96 border-gray-200 border rounded-3xl shadow-2xl bg-red-100 flex flex-col justify-center items-center mt-24">
+        <div className="h-48 w-96 p-4 border-gray-200 border rounded-3xl shadow-2xl bg-red-100 flex flex-col justify-center items-center mt-24">
             <h1 className="font-bold">{title}</h1>
             <p>{message}</p>
         </div>

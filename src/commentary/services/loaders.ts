@@ -1,10 +1,12 @@
 import type {CommentSearchRequestDto} from "../model/dto/CommentSearchRequestDto.ts";
 import axios from "axios";
 
-export const loadCommentariesByFilter = async (searchRequest: CommentSearchRequestDto) => {
+export const loadCommentariesByFilter = async (
+    searchRequest: CommentSearchRequestDto,
+    pageSize: number = 10,
+    pageNumber: number = 0
+) => {
     try{
-        const pageSize = 10;
-        const pageNumber = 0;
         const response = await axios.post(
             `${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_VER}/commentaries/search`,
             searchRequest,

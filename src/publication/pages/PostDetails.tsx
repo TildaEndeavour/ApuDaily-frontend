@@ -1,7 +1,7 @@
 import type {Post} from "../model/Post.ts";
 import {useLoaderData, useNavigate} from "react-router-dom";
-import {Pencil, Tag, Trash} from "lucide-react";
-import type {default as TagModel} from "../model/Tag.ts";
+import {Pencil, Trash} from "lucide-react";
+import type {Tag} from "../model/Tag.ts";
 import React, {type FormEvent, useState} from "react";
 import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
@@ -51,7 +51,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         if (content.tags) {
             const uploadTagsResponse = await uploadTagsToServer(content.tags);
             if (uploadTagsResponse) {
-                postTagsId = uploadTagsResponse.map((tag: TagModel) => tag.id);
+                postTagsId = uploadTagsResponse.map((tag: Tag) => tag.id);
             }
         }
 
@@ -74,7 +74,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         <div className="w-360 mx-auto flex flex-row gap-2">
             <section className="mt-10 flex flex-col gap-2">
                 <PostContent content={content}/>
-                <CommentarySection postId={content.id!} commentaries={loader.commentaries}/>
+                <CommentarySection postId={content.id!}/>
             </section>
             {user && user.id === content.user?.id && (
                 <section className="flex flex-col gap-2 mt-10">
