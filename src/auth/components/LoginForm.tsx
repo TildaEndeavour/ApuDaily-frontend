@@ -2,12 +2,12 @@ import React, {type ChangeEventHandler, type FormEvent, useState} from "react";
 import {validateLoginForm} from "../services/validation.ts";
 import {login} from "../services/auth.ts";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
-import type {LoginInputs} from "../model/AuthFormInputs.ts";
 import {useAuth} from "../hooks/useAuth.ts";
+import type {LoginFormInputs} from "../model/LoginFormInputs.ts";
 
 const LoginForm: React.FC<{ onClose: () => void; onSwitchToSignUp: () => void }> = ({ onClose, onSwitchToSignUp }) => {
 
-    const [formData, setFormData] = useState<LoginInputs>({
+    const [formData, setFormData] = useState<LoginFormInputs>({
         usernameOrEmail: '',
         password: ''
     })
