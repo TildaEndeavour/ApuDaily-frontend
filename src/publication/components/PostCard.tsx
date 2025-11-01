@@ -3,6 +3,7 @@ import type {Post} from "../model/Post.ts";
 import {useState} from "react";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostPreview from "./PostPreview.tsx";
+import {ReactionsCounter} from "../../reaction/components/ReactionsCounter.tsx";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
@@ -33,14 +34,17 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
                     </section>
                 </section>
                 <section className="w-3/10 flex flex-row justify-end">
-                    <p>
-                        {new Date(post.createdAt).toLocaleString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            timeZone: 'UTC'
-                        })}
-                    </p>
+                    <span className="flex flex-col justify-between">
+                        <p>
+                            {new Date(post.createdAt).toLocaleString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                timeZone: 'UTC'
+                            })}
+                        </p>
+                        <ReactionsCounter/>
+                    </span>
                 </section>
             </div>
             <button className="px-8 bg-gray-200 hover:bg-gray-300 rounded-r-3xl border-1" onClick={() => setIsShowingPreview(true)}>
