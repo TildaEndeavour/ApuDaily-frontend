@@ -1,5 +1,4 @@
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
-import type {Timezone} from "../../user/model/Timezone.ts";
 import type {SignUpFormInputs} from "../model/SignUpFormInputs.ts";
 import type {LoginFormInputs} from "../model/LoginFormInputs.ts";
 
@@ -103,10 +102,6 @@ export const validatePassword = (password:string) => {
     return message;
 };
 
-export const isTimezoneEmpty = (timezone: Timezone | null) => {
-    return timezone ? '' : "Timezone isn't selected";
-}
-
 export const validateLoginForm = (inputs: LoginFormInputs): FormValidator => {
     const validators = {
         usernameOrEmail: validateUsernameOrEmail(inputs.usernameOrEmail),
@@ -123,7 +118,6 @@ export const validateSignUpForm = (inputs: SignUpFormInputs): FormValidator => {
     const validators = {
         username: validateUsername(inputs.username),
         email: validateEmail(inputs.email),
-        timezone: isTimezoneEmpty(inputs.timezone),
         password: validatePassword(inputs.password),
         confirmPassword: (inputs.password !== inputs.confirmPassword) ? "Passwords don't match" : ''
     };
