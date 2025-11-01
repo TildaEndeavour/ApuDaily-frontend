@@ -1,9 +1,11 @@
-import {ImageOff, ScanEye} from "lucide-react";
+import {ImageOff} from "lucide-react";
 import type {Post} from "../model/Post.ts";
 import {useState} from "react";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostPreview from "./PostPreview.tsx";
-import {ReactionsCounter} from "../../reaction/components/ReactionsCounter.tsx";
+import ReactionsCounter from "../../reaction/components/ReactionsCounter.tsx";
+import CommentariesCounter from "../../commentary/components/CommentariesCounter.tsx";
+import {convertUTCtoUserDate} from "../../shared/services/converters.ts";
 
 const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
@@ -13,7 +15,7 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
 
     return (
         <div className="flex flex-row w-full h-fit animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both">
-            <div onClick={onSelect} className="p-4 w-full h-40 border-l-1 border-t-1 border-b-1 rounded-l-3xl shadow-2xl flex flex-row cursor-pointer gap-4">
+            <div onClick={onSelect} className="p-4 w-full h-40 border-1 rounded-3xl shadow-2xl flex flex-row cursor-pointer gap-4">
                 <section className="h-full w-3/10 flex flex-row justify-center items-center">
                     {post.thumbnail ? (
                         <img className="rounded-2xl w-full h-full object-cover" src={BASE_URL + post.thumbnail.url} alt="thumbnail"/>
@@ -33,23 +35,16 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
                         <p>{post.description}</p>
                     </section>
                 </section>
-                <section className="w-3/10 flex flex-row justify-end">
-                    <span className="flex flex-col justify-between">
-                        <p>
-                            {new Date(post.createdAt).toLocaleString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                timeZone: 'UTC'
-                            })}
-                        </p>
-                        <ReactionsCounter/>
-                    </span>
+                <section className="w-3/10 flex flex-col justify-between">
+                    <p className="flex justify-end">
+                        {convertUTCtoUserDate(post.createdAt!)}
+                    </p>
+                    <p className="flex justify-end">
+                        <CommentariesCounter/>
+                    </p>
+                    <ReactionsCounter/>
                 </section>
             </div>
-            <button className="px-8 bg-gray-200 hover:bg-gray-300 rounded-r-3xl border-1" onClick={() => setIsShowingPreview(true)}>
-                <ScanEye size={48} strokeWidth={1}/>
-            </button>
             <ModalContainer isOpen={isShowingPreview} onClose={() => setIsShowingPreview(false)}>
                 <PostPreview postPreview={post}/>
             </ModalContainer>
