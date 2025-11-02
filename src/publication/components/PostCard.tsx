@@ -40,7 +40,7 @@ const PostCard: React.FC<{onSelect:() => void; post: Post}> = ({onSelect, post})
                         {convertUTCtoUserDate(post.createdAt!)}
                     </p>
                     <p className="flex justify-end">
-                        <CommentariesCounter/>
+                        <CommentariesCounter commentariesNum={post.commentariesCount}/>
                     </p>
                     <ReactionsCounter/>
                 </section>
