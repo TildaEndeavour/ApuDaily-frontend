@@ -4,6 +4,7 @@ export interface Reaction{
     id: number,
     targetTypeId: number,
     entityId: number,
-    reactionTypeId: number,
-    user: UserProfile
+    isUpvote: boolean,
+    user: UserProfile,
+    createdAt: Date
 }
