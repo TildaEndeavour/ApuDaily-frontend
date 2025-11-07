@@ -1,9 +1,8 @@
-import type Tag from "../model/Tag.ts";
+import type {Tag} from "../model/Tag.ts";
 import axios from "axios";
 import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import type {PostUpdateRequestDto} from "../model/dto/PostUpdateRequestDto.ts";
 import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
-import type {PostFilter} from "../model/PostFilter.ts";
 import type {PostSearchRequestDto} from "../model/dto/PostSearchRequestDto.ts";
 
 export const uploadTagsToServer = async (tags: Tag[]) => {

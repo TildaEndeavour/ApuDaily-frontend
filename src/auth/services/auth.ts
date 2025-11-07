@@ -1,7 +1,16 @@
-import {LoginRequest, SignUpRequest} from "../model/Requests.ts";
 import axios from "axios";
+import type {LoginRequestDto} from "../dto/LoginRequestDto.ts";
+import type {SignUpRequestDto} from "../dto/SignUpRequestDto.ts";
 
-export const login = async(requestBody: LoginRequest) => {
+export const authAxios = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
+});
+
+export const unauthAxios = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER,
+});
+
+export const login = async(requestBody: LoginRequestDto) => {
     const response = await axios.post(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users/auth/login', requestBody);
     return {
         status: response.status,
@@ -9,7 +18,7 @@ export const login = async(requestBody: LoginRequest) => {
     };
 };
 
-export const signUp = async(requestBody: SignUpRequest) => {
+export const signUp = async(requestBody: SignUpRequestDto) => {
     const response = await axios.post(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_VER + '/users', requestBody);
 
     return {

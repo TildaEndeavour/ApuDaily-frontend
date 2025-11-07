@@ -8,7 +8,7 @@ import type { PostFilter } from "../../model/PostFilter.ts";
 import { type Category, loader as loadAvailableCategories } from "../../model/Category.ts";
 import { loadAllTagsFromServer, loadAllUserProfiles } from "../../services/requests.ts";
 import type { Tag } from "../../model/Tag.ts";
-import type { UserProfile } from "../../model/UserProfile.ts";
+import type { UserProfile } from "../../../user/model/UserProfile.ts";
 
 function useSearchFormData() {
     const [loading, setLoading] = React.useState(true);

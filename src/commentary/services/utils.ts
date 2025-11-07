@@ -1,6 +1,6 @@
 import type {CommentaryResponseDto} from "../model/dto/CommentaryResponseDto.ts";
 import {loadUserProfileById} from "../../publication/services/requests.ts";
-import type {UserProfile} from "../../publication/model/UserProfile.ts";
+import type {UserProfile} from "../../user/model/UserProfile.ts";
 import {loadCommentariesByFilter} from "./loaders.ts";
 
 export const buildCommentary = async (responseDto: CommentaryResponseDto) => {

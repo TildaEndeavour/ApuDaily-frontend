@@ -7,11 +7,11 @@ import type {PostCreateRequestDto} from "../model/dto/PostCreateRequestDto.ts";
 import {uploadPost, uploadTagsToServer} from "../services/requests.ts";
 import {useNavigate} from "react-router-dom";
 import {getUserDetails} from "../../auth/services/auth.ts";
-import type User from "../../auth/model/User.ts";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
+import type {User} from "../../auth/model/User.ts";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostDetails from "./PostDetails.tsx";
-import type Tag from "../model/Tag.ts";
+import type {Tag} from "../model/Tag.ts";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const NewPost = () => {
 

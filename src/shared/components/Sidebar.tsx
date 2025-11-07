@@ -2,12 +2,11 @@ import {useEffect, useRef, useState} from "react";
 import {House, Menu, Pencil, Search} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import UserBadge from "../../auth/components/UserBadge.tsx";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import AuthModal from "../../auth/components/AuthModal.tsx";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const Sidebar = () => {
-    const {user} = useAuth();
-    const {removeTokens} = useAuth();
+    const {user, removeTokens} = useAuth();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isLoginCardOpen, setIsLoginCardOpen] = useState(false);
     const navigate = useNavigate();

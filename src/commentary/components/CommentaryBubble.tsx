@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import CommentaryForm from "./CommentaryForm.tsx";
 import {ChevronDown, ChevronUp, MessageCircleReply, PencilLine, Trash2} from "lucide-react";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import type {CommentaryBubbleProps} from "../model/CommentaryBubbleProps.ts";
 import type {CommentaryRequestDto} from "../model/CommentaryFormProps.ts";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
+import {convertUTCtoUserDate, convertUTCtoUserDateTime} from "../../shared/services/converters.ts";
 
 const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmitReply, onUpdateCommentary, onDeleteCommentary}) => {
 
@@ -25,16 +26,12 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
     return (
         <div className="flex flex-col w-full gap-2 shadow-2xl p-4 border-l-1 rounded-r-3xl overflow-x-auto animate-fade-down">
             <div>
-                <section className="px-4 flex flex-row gap-2">
-                    {commentary.user.username} at {commentary.createdAt.toString()}
-                    {user && <button className="flex flex-row gap-2"
-                        onClick={() => setIsReplying((prevState) => {
-                            setIsUpdating(false);
-                            return !prevState;
-                        })}
-                    >
-                        <MessageCircleReply size={24} strokeWidth={1}/>Reply
-                    </button>}
+                <section className="px-4 flex flex-row justify-between">
+                    <span className="flex flex-row gap-4">
+                        <p>{commentary.user.username}</p>
+                        <p>{convertUTCtoUserDateTime(commentary.createdAt)}</p>
+                        {commentary.updatedAt && <p>edited ({convertUTCtoUserDateTime(commentary.updatedAt)})</p>}
+                    </span>
                     {(user?.id === commentary.user.id) &&
                         <section className="flex flex-row gap-2">
                             <button
@@ -52,7 +49,8 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
                             >
                                 <Trash2 size={24} strokeWidth={1}/>Delete
                             </button>
-                        </section>}
+                        </section>
+                    }
                 </section>
                 <section className="py-6 px-4">
                     {commentary.content}
@@ -65,10 +63,21 @@ const CommentaryBubble: React.FC<CommentaryBubbleProps> = ({commentary, onSubmit
                         content={isUpdating ? commentary.content : ""}
                         onSubmit={submitReply}
                     />}
-                <button className="flex flex-row gap-2"
-                        onClick={() => setIsShowReplies((prevState) => !prevState)}>
+                <span className="flex flex-row gap-2">
+                    <button className="flex flex-row gap-2"
+                            onClick={() => setIsShowReplies((prevState) => !prevState)}>
                     {isShowReplies ? <ChevronUp size={24} strokeWidth={1}/> : <ChevronDown size={24} strokeWidth={1}/>} Replies ({commentary.replies?.length})
                 </button>
+                    {user &&
+                        <button className="flex flex-row gap-2"
+                         onClick={() => setIsReplying((prevState) => {
+                             setIsUpdating(false);
+                             return !prevState;
+                         })}
+                        >
+                            <MessageCircleReply size={24} strokeWidth={1}/>Reply
+                        </button>}
+                </span>
                 {isShowReplies && commentary.replies?.map(reply =>
                     <section key={reply.id} className="flex flex-row mt-8">
                         <div className="w-6"/>

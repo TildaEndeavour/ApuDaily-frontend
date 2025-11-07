@@ -1,4 +1,4 @@
-import type {UserProfile} from "../../publication/model/UserProfile.ts";
+import type {UserProfile} from "../../user/model/UserProfile.ts";
 
 export interface Commentary{
     id: number,

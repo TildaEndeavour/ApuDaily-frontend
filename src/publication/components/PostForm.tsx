@@ -6,7 +6,7 @@ import type Quill from "quill";
 import {isTag} from "../services/validation.ts";
 import {type Category, loader as loadAvailableCategories} from "../model/Category.ts";
 import type {Post} from "../model/Post.ts";
-import type {PostFormProps} from "../../shared/model/PostFormProps.ts";
+import type {PostFormProps} from "../model/PostFormProps.ts";
 
 const PostForm: React.FC<PostFormProps> = ({post, errors, onChangePost, onSubmitPost, onPreview}) => {
 

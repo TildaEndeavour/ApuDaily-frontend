@@ -3,6 +3,8 @@ import DOMPurify from "dompurify";
 import {Tag} from "lucide-react";
 import React from "react";
 
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 const PostContent: React.FC<{content: Post}> = ({content}) => {
     return (
         <div className="animate-fade-down animate-once animate-duration-1000 animate-ease-in-out animate-alternate animate-fill-both
@@ -12,13 +14,13 @@ const PostContent: React.FC<{content: Post}> = ({content}) => {
                 <section className="flex flex-row justify-between mb-8">
                     <h4 className="font-bold">{content.category?.name}</h4>
                     <span>
-                                {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    timeZone: 'UTC'
-                                })}
-                             </span>
+                        {content.createdAt && new Date(content.createdAt).toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            timeZone: userTimeZone
+                        })}
+                    </span>
                 </section>
                 <h1 className="mb-6 ">
                     {content.title}

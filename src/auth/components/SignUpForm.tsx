@@ -1,12 +1,14 @@
-import {type ChangeEventHandler, type FormEvent, useState} from "react";
+import React, {type ChangeEventHandler, type FormEvent, useState} from "react";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
-import {signUp} from "../services/auth.ts";
-import type {SignUpInputs} from "../model/AuthFormInputs.ts";
 import {validateSignUpForm} from "../services/validation.ts";
 import axios from "axios";
+import type {SignUpFormInputs} from "../model/SignUpFormInputs.ts";
+import type {SignUpRequestDto} from "../dto/SignUpRequestDto.ts";
+import {signUp} from "../services/auth.ts";
 
 const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin }) => {
-    const [formData, setFormData] = useState<SignUpInputs>({
+
+    const [formData, setFormData] = useState<SignUpFormInputs>({
         username: '',
         email: '',
         password: '',
@@ -20,8 +22,15 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
         setFormValidator(validateSignUpForm(formData));
         if (formValidator && !formValidator.isValid) return;
 
+        const request: SignUpRequestDto = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword
+        }
+
         try {
-            await signUp(formData);
+            await signUp(request);
             setResult("User created!");
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
@@ -49,7 +58,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="username"
                     name="username"
                     placeholder="Enter your nickname"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.username) &&
@@ -58,7 +67,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="email"
                     name="email"
                     placeholder="Enter your email"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.email) &&
@@ -67,7 +76,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="password"
                     name="password"
                     placeholder="Enter your password"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.password) &&
@@ -76,7 +85,7 @@ const SignUpForm: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchToLogin
                     id="confirmPassword"
                     name="confirmPassword"
                     placeholder="Confirm your password"
-                    className="border-1 h-fit p-4 ml-4 rounded-3xl"
+                    className="border-1 h-fit w-full p-4 ml-4 rounded-3xl"
                     onChange={handleChange}
                 />
                 {(!formValidator?.isValid && formValidator?.messages.confirmPassword) &&

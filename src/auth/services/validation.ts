@@ -1,5 +1,6 @@
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
-import type {LoginInputs, SignUpInputs} from "../model/AuthFormInputs.ts";
+import type {SignUpFormInputs} from "../model/SignUpFormInputs.ts";
+import type {LoginFormInputs} from "../model/LoginFormInputs.ts";
 
 const containsForbiddenChars = (str: string, forbiddenChars: string[]) => {
     for(const char of str){
@@ -101,7 +102,7 @@ export const validatePassword = (password:string) => {
     return message;
 };
 
-export const validateLoginForm = (inputs: LoginInputs): FormValidator => {
+export const validateLoginForm = (inputs: LoginFormInputs): FormValidator => {
     const validators = {
         usernameOrEmail: validateUsernameOrEmail(inputs.usernameOrEmail),
         password: validatePassword(inputs.password),
@@ -113,7 +114,7 @@ export const validateLoginForm = (inputs: LoginInputs): FormValidator => {
     }
 };
 
-export const validateSignUpForm = (inputs: SignUpInputs): FormValidator => {
+export const validateSignUpForm = (inputs: SignUpFormInputs): FormValidator => {
     const validators = {
         username: validateUsername(inputs.username),
         email: validateEmail(inputs.email),

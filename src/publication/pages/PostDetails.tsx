@@ -3,7 +3,6 @@ import {useLoaderData, useNavigate} from "react-router-dom";
 import {Pencil, Trash} from "lucide-react";
 import type {Tag} from "../model/Tag.ts";
 import React, {type FormEvent, useState} from "react";
-import {useAuth} from "../../auth/providers/AuthProvider.tsx";
 import ModalContainer from "../../shared/components/ModalContainer.tsx";
 import PostForm from "../components/PostForm.tsx";
 import type {FormValidator} from "../../shared/model/FormValidator.ts";
@@ -14,6 +13,7 @@ import type {PostDeleteRequestDto} from "../model/dto/PostDeleteRequestDto.ts";
 import ConfirmModal from "../../shared/components/ConfirmModal.tsx";
 import CommentarySection from "../../commentary/components/CommentarySection.tsx";
 import PostContent from "../components/PostContent.tsx";
+import {useAuth} from "../../auth/hooks/useAuth.ts";
 
 const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
 
@@ -74,6 +74,10 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         <div className="w-360 mx-auto flex flex-row gap-2">
             <section className="mt-10 flex flex-col gap-2">
                 <PostContent content={content}/>
+                <h1>
+                    {content.commentariesCount}{" "}
+                    {content.commentariesCount === 1 ? "Commentary" : "Commentaries"}
+                </h1>
                 <CommentarySection postId={content.id!}/>
             </section>
             {user && user.id === content.user?.id && (

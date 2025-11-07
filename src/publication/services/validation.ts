@@ -16,15 +16,11 @@ export function isPostTitle(value: string){
 }
 
 export function isContentEmpty(content: string){
-    let message = '';
-    if (content.length < 300) message = 'Too little content, check the minimum number of symbols.';
-    return message;
+    return (content.length < 300) ? 'Too little content, check the minimum number of symbols.' : '';
 }
 
 export function isCategoryEmpty(category: Category | null){
-    let message = '';
-    if(!category) message = "Category isn't selected";
-    return message;
+    return category ? '' : "Category isn't selected";
 }
 
 export function validatePostForm(form: Post): FormValidator{
