@@ -12,7 +12,7 @@ const CommentaryForm: React.FC<CommentaryFormProps> = ({postId, commentId, conte
 
     return (
         <form
-            className="w-full h-fit p-4 shadow-2xl rounded-3xl animate-fade-down"
+            className="w-full h-fit p-4 shadow-2xl animate-fade-down"
             onSubmit={(e) => handleSubmit(e)}
         >
             <textarea
