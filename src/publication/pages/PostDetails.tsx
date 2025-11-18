@@ -74,7 +74,7 @@ const PostDetails: React.FC<{postPreview : Post | null}>= ({postPreview}) => {
         <div className="w-360 mx-auto flex flex-row gap-2">
             <section className="mt-10 flex flex-col gap-2">
                 <PostContent content={content}/>
-                <h1>
+                <h1 className="animate-fade-down">
                     {content.commentariesCount}{" "}
                     {content.commentariesCount === 1 ? "Commentary" : "Commentaries"}
                 </h1>
